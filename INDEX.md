@@ -19,14 +19,17 @@ Peta navigasi utama seluruh dokumentasi ekosistem aplikasi BBKKP. Gunakan halama
 
 ---
 
-## 🌐 00 — Global Standards & SOP (Lintas Project)
+## 🌐 00 — Global Standards & Architecture (Lintas Project)
 
 Dokumen standar teknis, aturan pengkodean, keamanan database/RBAC, dan SOP alur Git yang berlaku untuk **semua repositori**.
 
 | Dokumen | Path | Deskripsi |
 |---|---|---|
+| Ecosystem Architecture Overview | [ecosystem_overview.md](docs/00-global/architecture/ecosystem_overview.md) | Gambaran umum arsitektur ekosistem BBKKP (Polimer, SIS, Redis, BNI VA, BSrE TTE) |
 | Rules & Development Guidelines | [coding_guidelines.md](docs/00-global/standards/coding_guidelines.md) | Standar keamanan, RBAC, pencegahan IDOR, transaksi DB, dan zero-disruption |
+| Security Guidelines | [security_guidelines.md](docs/00-global/standards/security_guidelines.md) | Standar keamanan API, validasi webhook signature, sanitasi input, & secret management |
 | SOP Git Dual-Remote Workflow | [git_dual_remote_workflow.md](docs/00-global/standards/git_dual_remote_workflow.md) | Panduan lengkap alur kerja Git Dual-Remote (`origin` vs `upstream`) |
+| Index Global | [_index.md](docs/00-global/_index.md) | Halaman utama standar global |
 
 ---
 
@@ -39,6 +42,8 @@ Dokumen standar teknis, aturan pengkodean, keamanan database/RBAC, dan SOP alur 
 |---|---|---|
 | System Overview Polimer | [system_overview.md](docs/projects/bbkkp-polimer/02-architecture/system_overview.md) | Arsitektur & modul aplikasi BBKKP Polimer |
 | Analisis & Roadmap Polimer | [analisis_roadmap.md](docs/projects/bbkkp-polimer/02-architecture/analisis_roadmap.md) | Analisis kode eksisting Polimer & strategi refactoring |
+| Setup & Onboarding Guide | [setup_guide.md](docs/projects/bbkkp-polimer/05-operations/setup_guide.md) | Panduan instalasi lokal (PHP, Composer, Node, Artisan, Redis) |
+| Environment Reference | [environment.md](docs/projects/bbkkp-polimer/05-operations/environment.md) | Penjelasan rinci seluruh variabel `.env` Polimer |
 | Index Project Polimer | [_index.md](docs/projects/bbkkp-polimer/_index.md) | Halaman utama dokumentasi Polimer |
 
 ---
@@ -48,7 +53,9 @@ Dokumen standar teknis, aturan pengkodean, keamanan database/RBAC, dan SOP alur 
 
 | Dokumen | Path | Deskripsi |
 |---|---|---|
-| Flow & Modul SIS | [flow_modul_sis.md](docs/projects/bbkkp-sis/02-architecture/flow_modul_sis.md) | Alur bisnis & struktur modul aplikasi BBKKP SIS |
+| Flow & Modul SIS | [flow_modul_sis.md](docs/projects/bbkkp-sis/02-architecture/flow_modul_sis.md) | Alur bisnis & struktur modul aplikasi SIS legacy |
+| Setup & Onboarding Guide | [setup_guide.md](docs/projects/bbkkp-sis/05-operations/setup_guide.md) | Panduan instalasi & import database legacy SIS |
+| Environment Reference | [environment.md](docs/projects/bbkkp-sis/05-operations/environment.md) | Penjelasan variabel `.env` & koneksi DB legacy SIS |
 | Index Project SIS | [_index.md](docs/projects/bbkkp-sis/_index.md) | Halaman utama dokumentasi SIS |
 
 ---
@@ -59,6 +66,7 @@ Dokumen standar teknis, aturan pengkodean, keamanan database/RBAC, dan SOP alur 
 | Dokumen | Path | Deskripsi |
 |---|---|---|
 | FRD Integrasi SIS & Polimer | [frd_integrasi.md](docs/projects/integrasi-sis-polimer/01-product/frd_integrasi.md) | Spesifikasi fungsional integrasi data Polimer & SIS |
+| DB Schema & Migration Spec | [db_schema_migration.md](docs/projects/integrasi-sis-polimer/02-architecture/db_schema_migration.md) | Pemetaan skema DB SIS ke Polimer & spec artisan command idempoten |
 | Target Milestone Integrasi | [milestone.md](docs/projects/integrasi-sis-polimer/06-tasks/milestone.md) | Timeline & target milestone sprint integrasi |
 | Sprint 1 Breakdown | [sprint_1_breakdown.md](docs/projects/integrasi-sis-polimer/06-tasks/sprint_1_breakdown.md) | Rincian tugas Sprint 1: Integrasi Akun & Sertifikat SIS |
 | Sprint 2 Breakdown | [sprint_2_breakdown.md](docs/projects/integrasi-sis-polimer/06-tasks/sprint_2_breakdown.md) | Rincian tugas Sprint 2 |
