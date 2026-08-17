@@ -1,84 +1,67 @@
 ---
-title: "Index — Map of Content"
-summary: "Peta navigasi utama seluruh dokumentasi sistem BBKKP. Digunakan sebagai entry point oleh AI agent dan engineer."
+title: "Index — Map of Content (Multi-Project SSOT)"
+summary: "Peta navigasi utama seluruh dokumentasi sistem BBKKP terpusat. Single Source of Truth untuk semua proyek."
 created: "2026-08-17"
 updated: "2026-08-17"
 tags:
   - moc
   - index
   - bbkkp
+  - ssot
 aliases:
   - "MOC"
-  - "Peta Dokumen"
+  - "Peta Dokumen Multi Project"
 ---
 
-# 🗺️ Index — Map of Content BBKKP
+# 🗺️ Index — Map of Content (Single Source of Truth BBKKP)
 
-Peta navigasi utama seluruh dokumentasi ekosistem aplikasi BBKKP (Polimer & SIS). Gunakan dokumen ini sebagai **entry point** untuk menemukan spesifikasi produk, arsitektur, standar, dan rincian sprint.
+Peta navigasi utama seluruh dokumentasi ekosistem aplikasi BBKKP. Gunakan halaman ini untuk mengakses dokumen berdasarkan **Global Standards** atau **Project Specific**.
 
 ---
 
-## 📋 01 — Product
+## 🌐 00 — Global Standards & SOP (Lintas Project)
 
-Dokumentasi kebutuhan produk, Functional Requirement Document (FRD), riset, dan catatan rilis.
+Dokumen standar teknis, aturan pengkodean, keamanan database/RBAC, dan SOP alur Git yang berlaku untuk **semua repositori**.
 
 | Dokumen | Path | Deskripsi |
 |---|---|---|
-| FRD Integrasi BBKKP SIS | [frd_integrasi_bbkkp_sis.md](docs/01-product/requirements/frd_integrasi_bbkkp_sis.md) | Dokumen spesifikasi kebutuhan fungsional integrasi Polimer & SIS |
+| Rules & Development Guidelines | [coding_guidelines.md](docs/00-global/standards/coding_guidelines.md) | Standar keamanan, RBAC, pencegahan IDOR, transaksi DB, dan zero-disruption |
+| SOP Git Dual-Remote Workflow | [git_dual_remote_workflow.md](docs/00-global/standards/git_dual_remote_workflow.md) | Panduan lengkap alur kerja Git Dual-Remote (`origin` vs `upstream`) |
 
 ---
 
-## 🏗️ 02 — Architecture
+## 🚀 Projects Directory
 
-Desain arsitektur sistem, spesifikasi teknis, alur modul, dan integrasi antar sistem.
+### 🟢 1. Project: BBKKP Polimer (`bbkkp-polimer`)
+*Repositori: `Rayendraarya26/private-polimer` / `bakulkapas/bbkkp-polimer`*
 
 | Dokumen | Path | Deskripsi |
 |---|---|---|
-| Dokumentasi BBKKP Polimer | [dokumentasi_bbkkp_polimer.md](docs/02-architecture/system/dokumentasi_bbkkp_polimer.md) | Overview arsitektur & struktur modul aplikasi Polimer |
-| Dokumentasi Flow & Modul SIS | [dokumentasi_flow_dan_modul_sis.md](docs/02-architecture/system/dokumentasi_flow_dan_modul_sis.md) | Overview alur kerja & modul bisnis sistem BBKKP SIS |
-| Analisis & Roadmap Polimer | [analisis_dan_roadmap_polimer.md](docs/02-architecture/system/analisis_dan_roadmap_polimer.md) | Analisis kondisi sistem Polimer & strategi refactoring |
+| System Overview Polimer | [system_overview.md](docs/projects/bbkkp-polimer/02-architecture/system_overview.md) | Arsitektur & modul aplikasi BBKKP Polimer |
+| Analisis & Roadmap Polimer | [analisis_roadmap.md](docs/projects/bbkkp-polimer/02-architecture/analisis_roadmap.md) | Analisis kode eksisting Polimer & strategi refactoring |
+| Index Project Polimer | [_index.md](docs/projects/bbkkp-polimer/_index.md) | Halaman utama dokumentasi Polimer |
 
 ---
 
-## ⚖️ 03 — Decisions
-
-Architecture Decision Records (ADR) — pencatatan keputusan arsitektur dan teknologi.
+### 🔵 2. Project: BBKKP SIS (`bbkkp-sis`)
+*Repositori: `Rayendraarya26/private-sis` / `bakulkapas/bbkkp-sis`*
 
 | Dokumen | Path | Deskripsi |
 |---|---|---|
-| _Index Decisions | [_index.md](docs/03-decisions/_index.md) | Daftar catatan keputusan arsitektur (ADR) |
+| Flow & Modul SIS | [flow_modul_sis.md](docs/projects/bbkkp-sis/02-architecture/flow_modul_sis.md) | Alur bisnis & struktur modul aplikasi BBKKP SIS |
+| Index Project SIS | [_index.md](docs/projects/bbkkp-sis/_index.md) | Halaman utama dokumentasi SIS |
 
 ---
 
-## 📐 04 — Standards
-
-Standar penulisan kode, pedoman keamanan, dan alur kerja pengembangan (SOP).
-
-| Dokumen | Path | Deskripsi |
-|---|---|---|
-| Rules & Guidelines Pengerjaan | [guideline_dan_rules_pengerjaan.md](docs/04-standards/code/guideline_dan_rules_pengerjaan.md) | Standar keamanan, transaksi DB, dan kestabilan sistem live |
-| SOP Git Dual-Remote Workflow | [guideline_git_dual_remote_workflow.md](docs/04-standards/process/guideline_git_dual_remote_workflow.md) | Panduan alur Git Dual-Remote (`origin` vs `upstream`) |
-
----
-
-## ⚙️ 05 — Operations
-
-Panduan setup environment lokal, konfigurasi database, dan deployment.
+### 🟣 3. Project: Integrasi SIS & Polimer (`integrasi-sis-polimer`)
+*Proyek Cross-System Integrasi Data & Sertifikasi*
 
 | Dokumen | Path | Deskripsi |
 |---|---|---|
-| _Index Operations | [_index.md](docs/05-operations/_index.md) | Panduan setup dan operational deployment |
-
----
-
-## 📅 06 — Tasks
-
-Milestone integrasi, roadmap proyek, dan rincian tugas per sprint.
-
-| Dokumen | Path | Deskripsi |
-|---|---|---|
-| Milestone Sprint Integrasi | [milestone_sprint_integrasi_bbkkp_sis.md](docs/06-tasks/roadmap/milestone_sprint_integrasi_bbkkp_sis.md) | Target milestone & timeline integrasi Polimer & SIS |
-| Sprint 1 Breakdown | [sprint_1_breakdown.md](docs/06-tasks/sprints/sprint_1_breakdown.md) | Rincian tugas Sprint 1: Integrasi Akun & Sertifikat SIS |
-| Sprint 2 Breakdown | [sprint_2_breakdown.md](docs/06-tasks/sprints/sprint_2_breakdown.md) | Rincian tugas Sprint 2 |
-| Sprint 3 Breakdown | [sprint_3_breakdown.md](docs/06-tasks/sprints/sprint_3_breakdown.md) | Rincian tugas Sprint 3 |
-| Sprint 4 Breakdown | [sprint_4_breakdown.md](docs/06-tasks/sprints/sprint_4_breakdown.md) | Rincian tugas Sprint 4 |
+| FRD Integrasi SIS & Polimer | [frd_integrasi.md](docs/projects/integrasi-sis-polimer/01-product/frd_integrasi.md) | Spesifikasi fungsional integrasi data Polimer & SIS |
+| Target Milestone Integrasi | [milestone.md](docs/projects/integrasi-sis-polimer/06-tasks/milestone.md) | Timeline & target milestone sprint integrasi |
+| Sprint 1 Breakdown | [sprint_1_breakdown.md](docs/projects/integrasi-sis-polimer/06-tasks/sprint_1_breakdown.md) | Rincian tugas Sprint 1: Integrasi Akun & Sertifikat SIS |
+| Sprint 2 Breakdown | [sprint_2_breakdown.md](docs/projects/integrasi-sis-polimer/06-tasks/sprint_2_breakdown.md) | Rincian tugas Sprint 2 |
+| Sprint 3 Breakdown | [sprint_3_breakdown.md](docs/projects/integrasi-sis-polimer/06-tasks/sprint_3_breakdown.md) | Rincian tugas Sprint 3 |
+| Sprint 4 Breakdown | [sprint_4_breakdown.md](docs/projects/integrasi-sis-polimer/06-tasks/sprint_4_breakdown.md) | Rincian tugas Sprint 4 |
+| Index Project Integrasi | [_index.md](docs/projects/integrasi-sis-polimer/_index.md) | Halaman utama dokumentasi Integrasi |
