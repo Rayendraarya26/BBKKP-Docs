@@ -1,0 +1,25 @@
+# IDE & Editor Settings
+.vscode/
+.idea/
+.fleet/
+*.code-workspace
+
+# AI Assistants & Agents
+.agents/
+.gemini/
+brain/
+
+# Obsidian App Local State
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/backups/
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Log & Temporary Files
+*.log
+*.tmp
+*.bak
