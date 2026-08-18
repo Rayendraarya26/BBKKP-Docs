@@ -43,6 +43,7 @@ Dokumen standar teknis, aturan pengkodean, keamanan database/RBAC, dan SOP alur 
 | System Overview Polimer | [system_overview.md](docs/projects/bbkkp-polimer/02-architecture/system_overview.md) | Arsitektur & modul aplikasi BBKKP Polimer |
 | Analisis & Roadmap Polimer | [analisis_roadmap.md](docs/projects/bbkkp-polimer/02-architecture/analisis_roadmap.md) | Analisis kode eksisting Polimer & strategi refactoring |
 | Setup & Onboarding Guide | [setup_guide.md](docs/projects/bbkkp-polimer/05-operations/setup_guide.md) | Panduan instalasi lokal (PHP, Composer, Node, Artisan, Redis) |
+| Test Accounts & Login Info | [test_accounts.md](docs/projects/bbkkp-polimer/05-operations/test_accounts.md) | Daftar akun seeder default untuk pengujian login |
 | Environment Reference | [environment.md](docs/projects/bbkkp-polimer/05-operations/environment.md) | Penjelasan rinci seluruh variabel `.env` Polimer |
 | Index Project Polimer | [_index.md](docs/projects/bbkkp-polimer/_index.md) | Halaman utama dokumentasi Polimer |
 

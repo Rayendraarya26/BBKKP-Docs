@@ -9,3 +9,8 @@ Folder ini berisi seluruh dokumentasi spesifik untuk aplikasi **BBKKP Polimer**.
 * **`02-architecture/`**:
   * [`system_overview.md`](02-architecture/system_overview.md) — Arsitektur & modul aplikasi Polimer.
   * [`analisis_roadmap.md`](02-architecture/analisis_roadmap.md) — Analisis kode & strategi refactoring Polimer.
+* **`05-operations/`**:
+  * [`setup_guide.md`](05-operations/setup_guide.md) — Panduan instalasi dan lingkungan lokal.
+  * [`test_accounts.md`](05-operations/test_accounts.md) — Daftar akun pengujian & info login database seeder.
+  * [`environment.md`](05-operations/environment.md) — Konfigurasi environment variabel.
+
