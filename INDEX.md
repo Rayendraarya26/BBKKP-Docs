@@ -44,6 +44,8 @@ Dokumen standar teknis, aturan pengkodean, keamanan database/RBAC, dan SOP alur 
 | Analisis & Roadmap Polimer | [analisis_roadmap.md](docs/projects/bbkkp-polimer/02-architecture/analisis_roadmap.md) | Analisis kode eksisting Polimer & strategi refactoring |
 | Setup & Onboarding Guide | [setup_guide.md](docs/projects/bbkkp-polimer/05-operations/setup_guide.md) | Panduan instalasi lokal (PHP, Composer, Node, Artisan, Redis) |
 | Test Accounts & Login Info | [test_accounts.md](docs/projects/bbkkp-polimer/05-operations/test_accounts.md) | Daftar akun seeder default untuk pengujian login |
+| Modernization Milestone Plan | [milestone.md](docs/projects/bbkkp-polimer/06-tasks/milestone.md) | Roadmap milestone & 5-sprint plan modernisasi Polimer |
+| Sprint 1 Breakdown | [sprint_1_breakdown.md](docs/projects/bbkkp-polimer/06-tasks/sprint_1_breakdown.md) | Rincian tugas Sprint 1: Design System, Tailwind & UI Kit |
 | Environment Reference | [environment.md](docs/projects/bbkkp-polimer/05-operations/environment.md) | Penjelasan rinci seluruh variabel `.env` Polimer |
 | Index Project Polimer | [_index.md](docs/projects/bbkkp-polimer/_index.md) | Halaman utama dokumentasi Polimer |
 
