@@ -46,6 +46,7 @@ Dokumen standar teknis, aturan pengkodean, keamanan database/RBAC, dan SOP alur 
 | Test Accounts & Login Info | [test_accounts.md](docs/projects/bbkkp-polimer/05-operations/test_accounts.md) | Daftar akun seeder default untuk pengujian login |
 | Modernization Milestone Plan | [milestone.md](docs/projects/bbkkp-polimer/06-tasks/milestone.md) | Roadmap milestone & 5-sprint plan modernisasi Polimer |
 | Sprint 1 Breakdown | [sprint_1_breakdown.md](docs/projects/bbkkp-polimer/06-tasks/sprint_1_breakdown.md) | Rincian tugas Sprint 1: Design System, Tailwind & UI Kit |
+| Sprint 2 Breakdown | [sprint_2_breakdown.md](docs/projects/bbkkp-polimer/06-tasks/sprint_2_breakdown.md) | Rincian tugas Sprint 2: Modernisasi Total Portal Pelanggan |
 | Environment Reference | [environment.md](docs/projects/bbkkp-polimer/05-operations/environment.md) | Penjelasan rinci seluruh variabel `.env` Polimer |
 | Index Project Polimer | [_index.md](docs/projects/bbkkp-polimer/_index.md) | Halaman utama dokumentasi Polimer |
 

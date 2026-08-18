@@ -16,5 +16,7 @@ Folder ini berisi seluruh dokumentasi spesifik untuk aplikasi **BBKKP Polimer**.
 * **`06-tasks/`**:
   * [`milestone.md`](06-tasks/milestone.md) — Roadmap milestone & 5-sprint plan modernisasi Polimer.
   * [`sprint_1_breakdown.md`](06-tasks/sprint_1_breakdown.md) — Rincian tugas Sprint 1: Design System, Tailwind & UI Kit.
+  * [`sprint_2_breakdown.md`](06-tasks/sprint_2_breakdown.md) — Rincian tugas Sprint 2: Modernisasi Total Portal Pelanggan.
+
 
 
