@@ -234,7 +234,7 @@ graph LR
 
 ## 6. Bagaimana Integrasi BBKKP Polimer Menyelesaikan Masalah Ini?
 
-Dalam proyek integrasi ke **BBKKP Polimer**, seluruh titik putus di atas disederhanakan dan diotomatisasi secara fundamental:
+Dalam model arsitektur **Co-Existence & Data Bridging**, seluruh pengguna (pelanggan dan staf internal) dialihkan menggunakan **BBKKP Polimer** untuk proses pelayanan yang terpadu dan modern, sementara aplikasi/database **SIS Pusat** tetap beroperasi normal dan menerima pemutakhiran data secara otomatis:
 
 | Kondisi di Legacy `bbkkp-sis` (Terputus & Rumit) | Solusi Baru di `bbkkp-polimer` (Unified Super App) |
 | :--- | :--- |
@@ -242,4 +242,5 @@ Dalam proyek integrasi ke **BBKKP Polimer**, seluruh titik putus di atas diseder
 | **Billing 5 tahap manual** (Marketing $\rightarrow$ Pelanggan $\rightarrow$ Keuangan $\rightarrow$ Bukti Manual) | **Otomatisasi Penuh**: Marketing Approve $\rightarrow$ Repo Services terbitkan **Invoice TTE + BNI VA** $\rightarrow$ Callback Bank otomatis ubah status **LUNAS** & terbitkan **Kwitansi TTE**. |
 | **Persetujuan jadwal manual ganda** tanpa notifikasi | **Real-time Notifications** (In-app notification & WhatsApp Alert) langsung dengan aksi *1-click approval*. |
 | **Upload scan sertifikat manual** | **Otomatisasi TTE Kepala Balai** via Repo Services (BSrE QR Code) yang langsung terbit ke portal pelanggan. |
-| **Data silo & redirect membingungkan** | **100% Native di Polimer** tanpa redirect keluar ke domain/port legacy. |
+| **Data silo & redirect membingungkan** | **100% Native di Polimer** (tanpa redirect keluar), dengan **Continuous Two-Way Bridging** yang menjaga data di database SIS Pusat tetap sinkron dan valid untuk pelaporan kementerian. |
+

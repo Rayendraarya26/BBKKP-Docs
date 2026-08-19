@@ -11,25 +11,28 @@
 ## 1. Pendahuluan & Tujuan Proyek
 
 ### 1.1 Latar Belakang
-Saat ini, pemrosesan sertifikasi produk dan sistem manajemen di Balai Besar Kulit, Karet, dan Plastik (BBKKP) ditangani oleh sistem terpisah bernama **`bbkkp-sis`**. Pengguna pada aplikasi **BBKKP Polimer** saat ini di-redirect (diarahkan keluar) ke `bbkkp-sis` untuk melakukan pengajuan dan pemantauan sertifikasi.
+Sistem Informasi Sertifikasi (**`bbkkp-sis`**) merupakan sistem terpusat resmi dari **Kementerian Perindustrian RI** yang mengelola proses sertifikasi produk dan sistem manajemen industri. Pada konfigurasi sebelumnya, pengguna pada aplikasi **BBKKP Polimer** di-redirect (diarahkan keluar) ke `bbkkp-sis` untuk melakukan pendaftaran dan pemantauan permohonan sertifikasi.
 
-Dalam rangka mewujudkan Polimer sebagai **Single Unified Operation Hub (Super App)**, fungsionalitas `bbkkp-sis` akan diintegrasikan secara penuh ke dalam `bbkkp-polimer`. Dengan integrasi ini, seluruh pemrosesan permohonan sertifikasi—mulai dari pengajuan multi-item oleh pelanggan, verifikasi Marketing, penetapan tarif, penerbitan Invoice & Kwitansi ber-TTE, integrasi BNI Virtual Account, audit teknis 2-tahap (Tahap 1 Dokumen & Tahap 2 Pabrik/Lapangan), penanganan LKS (Laporan Ketidaksesuaian), pengambilan contoh (PPC), rapat komite evaluasi, hingga penerbitan Sertifikat ber-TTE dan monitoring surveilans—akan dilakukan langsung di Polimer.
+Dalam rangka mewujudkan Polimer sebagai **Single Unified Operation Hub (Super App)** bagi seluruh layanan di BBKKP, seluruh titik interaksi pengguna dialihkan secara penuh ke dalam `bbkkp-polimer`. Mengingat sistem `bbkkp-sis` merupakan **sistem terpusat kementerian yang wajib tetap aktif dan beroperasi normal (*Live & Operational Central System*)**, arsitektur integrasi mengadopsi model **Co-Existence & Data Bridging**:
+- **Bagi Pengguna (Pelanggan & Staf Internal BBKKP)**: Seluruh pemrosesan permohonan sertifikasi—mulai dari pengajuan multi-item oleh pelanggan, verifikasi Marketing, penetapan tarif, penerbitan Invoice & Kwitansi ber-TTE, integrasi BNI Virtual Account, audit teknis 2-tahap, penanganan LKS, rapat komite, hingga penerbitan Sertifikat ber-TTE dan monitoring surveilans—dilakukan secara *native* di dalam Polimer tanpa *redirect* keluar.
+- **Bagi Sistem Pusat (`bbkkp-sis`)**: Sistem SIS pusat tetap aktif melayani pelaporan kementerian dan audit pusat. Setiap mutasi permohonan, status transaksi, temuan audit, dan penerbitan sertifikat di Polimer disinkronkan secara otomatis (*two-way continuous bridging*) ke database SIS pusat.
 
 ### 1.2 Tujuan
-1. **Unifikasi Pengalaman Pengguna (Single System)**: Menghilangkan pengalihan (*redirection*) ke aplikasi legacy `bbkkp-sis` bagi pelanggan maupun staf internal.
-2. **Otomatisasi Finansial & Dokumen**: Mengintegrasikan **Repo Services** untuk penerbitan Invoice TTE, Virtual Account Bank BNI, dan Kwitansi TTE secara otomatis dan *real-time*.
-3. **Dukungan Multi-Pengajuan (Batch Submission)**: Memungkinkan pelanggan mengajukan beberapa permohonan sertifikasi (Baru, Perpanjang, Perubahan Scope/Data) dalam 1 kali transaksi *checkout*.
-4. **Kelengkapan Standar Audit Sertifikasi (ISO 17065 / 17021)**: Memastikan workflow teknis internal mencakup seluruh siklus audit: Audit Tahap 1, Audit Lapangan, PPC, LKS Tindakan Koreksi, Rekomendasi Komite, hingga Penerbitan Sertifikat.
-5. **Migrasi Data & Kontinuitas Layanan**: Mengintegrasikan data historis dari database `bbkkp_sis` ke `bbkkp_polimer` tanpa merusak riwayat transaksi dan data sertifikat aktif.
+1. **Unifikasi Pengalaman Pengguna (Single Front-Door)**: Mengalihkan 100% interaksi pelanggan dan staf internal BBKKP ke dalam ekosistem Polimer tanpa *redirection* ke antarmuka legacy.
+2. **Kompatibilitas & Keberlanjutan Sistem Pusat SIS**: Memastikan aplikasi dan database SIS pusat tetap berjalan normal, sinkron, dan selalu *up-to-date* untuk keperluan audit dan pelaporan nasional Kementerian Perindustrian.
+3. **Otomatisasi Finansial & Dokumen**: Mengintegrasikan **Repo Services** untuk penerbitan Invoice TTE, Virtual Account Bank BNI, dan Kwitansi TTE secara otomatis dan *real-time*.
+4. **Dukungan Multi-Pengajuan (Batch Submission)**: Memungkinkan pelanggan mengajukan beberapa permohonan sertifikasi (Baru, Perpanjang, Perubahan Scope/Data) dalam 1 kali transaksi *checkout*.
+5. **Kelengkapan Standar Audit Sertifikasi (ISO 17065 / 17021)**: Memastikan workflow teknis internal mencakup seluruh siklus audit: Audit Tahap 1, Audit Lapangan, PPC, LKS Tindakan Koreksi, Rekomendasi Komite, hingga Penerbitan Sertifikat.
+6. **Migrasi Data & Sinkronisasi Dua Arah (*Continuous Bridging*)**: Memigrasikan riwayat sertifikat aktif serta menjamin sinkronisasi data transaksional dua arah antara DB `bbkkp_polimer` dan DB `bbkkp_sis`.
 
 ---
 
 ## 2. Matriks Analisis Kebutuhan & Checklist Keperluan Integrasi
 
 | No | Kategori | Deskripsi Keperluan | Status Saat Ini | Kebutuhan Penyesuaian / Action Item |
-| :-: | :--- | :--- | :-: | :--- |
+| :-: | :--- | :--- | :--- | :-: | :--- |
 | **1** | **Autentikasi & Akun** | Sinkronisasi User & Pelanggan antara DB `sis` dan DB `polimer` | Partial (Command `SyncUserSis` sudah ada) | Meningkatkan sync dua arah & automatisasi integrasi profile perusahaan & pabrik. |
-| **2** | **Master Data** | Master Sertifikasi, Komoditi, Standar (SNI/ISO), Kode EA/NACE, & Tarif | Terpisah di DB `sis` | Import & sinkronisasi master data sertifikasi ke DB `bbkkp_services`/`bbkkp_polimer`. |
+| **2** | **Master Data** | Master Sertifikasi, Komoditi, Standar (SNI/ISO), Kode EA/NACE, & Tarif | Terpisah di DB `sis` | Import & sinkronisasi master data sertifikasi dari DB SIS ke DB Polimer. |
 | **3** | **Data Pabrik & Fasilitas** | Data multi-lokasi pabrik/fasilitas produksi pemohon | Di tabel `sis_pelanggan_pabrik` | Penambahan entitas Pabrik di Polimer yang berelasi dengan Pelanggan & Permohonan. |
 | **4** | **Pengajuan Multi-Item** | Form Wizard Pengajuan Sertifikasi Baru, Perpanjang, & Perubahan Scope | Form tunggal di React SPA | Modifikasi form React SPA untuk mendukung *multi-item cart submission* & upload berkas syarat. |
 | **5** | **Inbox Marketing** | Dashboard verifikasi permohonan & penyesuaian tarif oleh Tim Marketing | Belum ada di Polimer | Pembuatan UI & Controller Inbox Marketing pada `Modules/Permohonan`. |
@@ -39,7 +42,8 @@ Dalam rangka mewujudkan Polimer sebagai **Single Unified Operation Hub (Super Ap
 | **9** | **LKS & Tindakan Koreksi** | Pengelolaan Temuan LKS (Kritis/Mayor/Minor), upload bukti koreksi pelanggan, verifikasi auditor | Masih di `bbkkp-sis` | Pembuatan alur interaktif LKS antara Auditor dan Pelanggan di Polimer. |
 | **10** | **Komite & Sertifikat TTE** | Rapat Komite Sertifikasi, Rekomendasi, & Approval Penerbitan Sertifikat TTE | Masih di `bbkkp-sis` | Sub-modul Komite Sertifikasi & Issuer Engine Sertifikat ber-TTE. |
 | **11** | **Pasca Sertifikasi (Surveilans)** | Tracking masa berlaku sertifikat, jadwal surveilans berkala (Tahun 1 & 2), notifikasi resertifikasi | Masih di `bbkkp-sis` | Engine lifecycle sertifikat & scheduler alert surveilans. |
-| **12** | **Migrasi Data Historis** | Migrasi sertifikat aktif, data pabrik, & riwayat permohonan dari `bbkkp_sis` | Belum ada | Script migrasi ETL (*Extract, Transform, Load*) data historis. |
+| **12** | **Migrasi Data Historis** | Migrasi sertifikat aktif, data pabrik, & riwayat permohonan dari `bbkkp_sis` | Belum ada | Script migrasi ETL (*Extract, Transform, Load*) data historis idempoten. |
+| **13** | **Continuous Two-Way Bridging** | Sinkronisasi data permohonan baru & sertifikat terbit di Polimer ke database SIS pusat | Belum ada | Queue Job / Event Handler sinkronisasi data transaksi Polimer ➡️ DB SIS pusat. |
 
 ---
 
@@ -121,6 +125,12 @@ Untuk menjamin pemisahan kewenangan (*Segregation of Duties*) sesuai standar ser
 - **FR-09.1**: Seluruh dokumen ber-TTE (Invoice, Kwitansi, Sertifikat) dilengkapi dengan QR Code standar BSrE.
 - **FR-09.2**: Pengguna publik dapat menguji keabsahan dokumen melalui halaman `/tte/verify` dengan mengunggah PDF atau memindai QR Code.
 
+### 4.10 FR-10: Two-Way Data Synchronization & Bridging ke SIS Pusat
+- **FR-10.1**: Setiap pembuatan permohonan sertifikasi baru dan pemutakhiran data pabrik di Polimer otomatis men-dispatch job sinkronisasi untuk meng-*upsert* record ke tabel `sis_permohonan` dan `sis_pelanggan_pabrik` di database SIS pusat.
+- **FR-10.2**: Perubahan status transaksi (Approval Marketing, Pelunasan VA BNI, Surat Tugas Audit, Temuan LKS, Rekomendasi Komite, dan Penerbitan Sertifikat) otomatis disinkronkan ke status koresponden di SIS pusat.
+- **FR-10.3**: Master data komoditi, regulasi SNI, dan parameter audit dari SIS pusat secara berkala disinkronkan ke Polimer guna memastikan keselarasan standar nasional.
+- **FR-10.4**: Proses bridging wajib idempoten dan dilengkapi antrean *retry* jika koneksi database/jaringan ke server SIS pusat mengalami *temporary outage*.
+
 ---
 
 ## 5. Alur Data & State Machine Permohonan
@@ -128,7 +138,7 @@ Untuk menjamin pemisahan kewenangan (*Segregation of Duties*) sesuai standar ser
 ```mermaid
 stateDiagram-v2
     [*] --> DRAFT : Pelanggan Mengisi Form Wizard Multi-Item & Pabrik
-    DRAFT --> DIAJUKAN_MARKETING : Pelanggan Submit Permohonan
+    DRAFT --> DIAJUKAN_MARKETING : Pelanggan Submit Permohonan (Sync to SIS)
     
     state DIAJUKAN_MARKETING {
         [*] --> REVIEW_ADMINISTRASI
@@ -138,26 +148,26 @@ stateDiagram-v2
     DIAJUKAN_MARKETING --> REVISI_PELANGGAN : Marketing Minta Perbaikan Berkas
     REVISI_PELANGGAN --> DIAJUKAN_MARKETING : Pelanggan Submit Ulang Berkas
     
-    DIAJUKAN_MARKETING --> REJECTED : Marketing Menolak Permohonan
+    DIAJUKAN_MARKETING --> REJECTED : Marketing Menolak Permohonan (Sync to SIS)
     
     DIAJUKAN_MARKETING --> PROCESSING_INVOICE : Marketing Approve
     PROCESSING_INVOICE --> INVOICE_GENERATED : Repo Services Berhasil Generate TTE & BNI VA
     
-    INVOICE_GENERATED --> LUNAS : Callback BNI VA Success (Memicu Kwitansi TTE)
+    INVOICE_GENERATED --> LUNAS : Callback BNI VA Success (Memicu Kwitansi TTE & Sync SIS Lunas)
     
     LUNAS --> PENJADWALAN_AUDIT : Masuk ke Koordinator Sertifikasi
-    PENJADWALAN_AUDIT --> AUDIT_TAHAP_1 : Auditor Ditugaskan
+    PENJADWALAN_AUDIT --> AUDIT_TAHAP_1 : Auditor Ditugaskan (Sync Jadwal ke SIS)
     AUDIT_TAHAP_1 --> AUDIT_TAHAP_2 : Dokumen Memadai
     
-    AUDIT_TAHAP_2 --> EVALUASI_LKS : Ada Temuan Ketidaksesuaian
+    AUDIT_TAHAP_2 --> EVALUASI_LKS : Ada Temuan Ketidaksesuaian (Sync LKS ke SIS)
     EVALUASI_LKS --> TINDAKAN_PERBAIKAN : Pelanggan Upload Bukti Koreksi
     TINDAKAN_PERBAIKAN --> EVALUASI_LKS : Auditor Verifikasi Bukti
     
     AUDIT_TAHAP_2 --> RAPAT_KOMITE : Tidak Ada Temuan / LKS Closed
     EVALUASI_LKS --> RAPAT_KOMITE : Seluruh LKS Closed/Memadai
     
-    RAPAT_KOMITE --> DRAFT_SERTIFIKAT : Komite Menyetujui Rekomendasi
-    DRAFT_SERTIFIKAT --> CERTIFICATE_ISSUED : TTE Kepala Balai via Repo Services
+    RAPAT_KOMITE --> DRAFT_SERTIFIKAT : Komite Menyetujui Rekomendasi (Sync Komite ke SIS)
+    DRAFT_SERTIFIKAT --> CERTIFICATE_ISSUED : TTE Kepala Balai via Repo Services (Sync Sertifikat Aktif ke SIS)
     
     CERTIFICATE_ISSUED --> PASCA_SERTIFIKASI_MONITORING : Sertifikat Aktif (Siklus Surveilans)
     PASCA_SERTIFIKASI_MONITORING --> [*]
@@ -168,18 +178,20 @@ stateDiagram-v2
 ## 6. Kebutuhan Non-Fungsional (Non-Functional Requirements)
 
 1. **Performa & Asynchronous Processing**:
-   - Seluruh pemanggilan ke Repo Services (TTE BSrE, BNI VA, WhatsApp Gateway) diproses melalui Laravel Queue dengan driver Redis/Database.
+   - Seluruh pemanggilan ke Repo Services (TTE BSrE, BNI VA, WhatsApp Gateway) dan proses bridging ke DB SIS pusat diproses melalui Laravel Queue dengan driver Redis/Database.
    - Waktu respons render UI Dashboard dan Form Wizard < 2 detik.
-2. **Keamanan Data & Idempotensi Callback**:
+2. **Keamanan Data & Idempotensi Callback / Sync**:
    - Endpoint Webhook Callback BNI VA wajib memvalidasi signature token / API Key dan menerapkan idempotency check agar callback ganda tidak memicu generasi kwitansi dobel.
-   - Seluruh mutasi status audit dan dokumen dicatat dalam tabel audit trail (`sys_audit_log`).
-3. **Ketersediaan & Fallback Auto-Retry**:
-   - Jika Repo Services mengalami *network timeout*, queue worker melakukan auto-retry hingga 3 kali dengan *exponential backoff* sebelum memberi notifikasi kegagalan ke dashboard Admin.
-4. **Kesesuaian Standar Audit ISO/IEC**:
+   - Mekanisme bridging ke DB SIS menerapkan *upsert pattern* dan *idempotency lock* untuk mencegah record duplikat.
+   - Seluruh mutasi status audit, dokumen, dan log sinkronisasi dicatat dalam tabel audit trail (`sys_audit_log` dan `sys_sync_log`).
+3. **Ketersediaan, Dual-System Health & Fallback Auto-Retry**:
+   - Jika Repo Services atau database SIS pusat mengalami *network timeout/downtime*, queue worker melakukan auto-retry hingga 3 kali dengan *exponential backoff* dan mencatat status ke dead-letter alert.
+4. **Kesesuaian Standar Audit ISO/IEC & Kepatuhan Kementerian**:
    - Sistem menjamin integritas data evaluasi audit dan Berita Acara Komite tidak dapat diubah setelah status *Approved by Committee*.
+   - Data sertifikat dan riwayat audit di SIS pusat tetap selaras dan valid untuk keperluan inspeksi/audit Kementerian Perindustrian sewaktu-waktu.
 
 ---
 
 ## 7. Kesimpulan FRD
 
-FRD versi 2.0 ini menyajikan spesifikasi fungsional yang lengkap dan mendalam untuk mentransformasikan seluruh kapabilitas `bbkkp-sis` ke dalam ekosistem `bbkkp-polimer`. Dengan terintegrasinya alur multi-item, profil pabrik, otomatisasi finansial (TTE Invoice, BNI VA, Kwitansi TTE), alur audit 2-tahap, manajemen LKS, hingga monitoring pasca-sertifikasi, sistem baru ini akan meningkatkan kecepatan, akurasi, dan kepatuhan standar pelayanan publik di BBKKP.
+FRD versi 2.0 ini menyajikan spesifikasi fungsional yang lengkap untuk menghadirkan pengalaman pengguna modern dan efisien di dalam **BBKKP Polimer** sekaligus memelihara interoperabilitas penuh dengan **sistem pusat BBKKP-SIS Kementerian Perindustrian**. Melalui model *Co-Existence*, *Single Front-Door*, dan *Continuous Two-Way Bridging*, BBKKP berhasil mewujudkan digitalisasi terpadu tanpa mengorbankan kepatuhan terhadap sistem terpusat kementerian.

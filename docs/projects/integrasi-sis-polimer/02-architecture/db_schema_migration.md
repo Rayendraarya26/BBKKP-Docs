@@ -7,30 +7,30 @@
 
 ---
 
-## 1. Tujuan Spesifikasi Migrasi
+## 1. Tujuan Spesifikasi Migrasi & Bridging
 
-Dokumen ini mendefinisikan pemetaan data (*database schema mapping*) dari database legacy `bbkkp_sis` ke database modern `bbkkp_polimer`.
+Dokumen ini mendefinisikan pemetaan data (*database schema mapping*) antara database terpusat `bbkkp_sis` dan database modern `bbkkp_polimer`.
 
-Sasaran utama migrasi:
-1. Memindahkan data sertifikat aktif (`status = on_going`) dari SIS ke tabel `pelanggan_sertifikasi` di Polimer.
-2. Memindahkan data profil pabrik pelanggan lama dari SIS ke tabel `pelanggan_pabrik` di Polimer.
-3. Memastikan pemindahan data dapat dijalankan secara **idempoten** (aman dijalankan berulang kali tanpa menciptakan duplikasi record).
+Sasaran utama arsitektur data:
+1. **Migrasi Historis (SIS ➡️ Polimer)**: Memindahkan data sertifikat aktif (`status = on_going`) dan profil pabrik dari SIS ke Polimer secara **idempoten**.
+2. **Continuous Bridging (Polimer ➡️ SIS Pusat)**: Memastikan setiap transaksi baru di Polimer (permohonan sertifikasi, pembayaran, hasil audit, dan sertifikat baru) tersinkronisasi ke tabel-tabel terkait di SIS pusat agar sistem pusat Kementerian tetap mutakhir.
+3. **Integritas & Idempotensi**: Seluruh operasi ETL dan bridging aman dijalankan berulang kali tanpa menciptakan duplikasi record (*Idempotent Upsert*).
 
 ---
 
 ## 2. Pemetaan Skema Tabel (Database Schema Mapping)
 
-### 2.1. Tabel Sertifikat: `sis_sertifikat` ➡️ `pelanggan_sertifikasi`
+### 2.1. Tabel Sertifikat: `sis_sertifikat` 🔁 `pelanggan_sertifikasi`
 
-| Kolom Asal (`bbkkp_sis.sis_sertifikat`) | Tipe Data Asal | Kolom Tujuan (`bbkkp_polimer.pelanggan_sertifikasi`) | Tipe Data Tujuan | Catatan Transformasi |
+| Kolom Asal (`bbkkp_sis.sis_sertifikat`) | Tipe Data Asal | Kolom Tujuan (`bbkkp_polimer.pelanggan_sertifikasi`) | Tipe Data Tujuan | Catatan Transformasi & Bridging |
 | :--- | :--- | :--- | :--- | :--- |
-| `id_sertifikat` | INT (PK) | `sis_sertifikat_id` | BIGINT (Nullable) | Dipakai sebagai *unique key constraint* untuk pengecekan idempotensi. |
+| `id_sertifikat` | INT (PK) | `sis_sertifikat_id` | BIGINT (Nullable) | Dipakai sebagai *unique key constraint* untuk pengecekan idempotensi dua arah. |
 | `nomor_sertifikat` | VARCHAR(100) | `nomor_sertifikat` | VARCHAR(150) | Trim whitespace & normalisasi format string. |
-| `id_perusahaan` | INT (FK) | `pelanggan_pabrik_id` | BIGINT (FK) | Dihubungkan dengan ID pabrik hasil migrasi di `pelanggan_pabrik`. |
+| `id_perusahaan` | INT (FK) | `pelanggan_pabrik_id` | BIGINT (FK) | Dihubungkan dengan ID pabrik di `pelanggan_pabrik` (`sis_perusahaan_id`). |
 | `tgl_terbit` | DATE | `tanggal_terbit` | DATE | Format YYYY-MM-DD. |
 | `tgl_kadaluarsa` | DATE | `tanggal_kadaluarsa` | DATE | Format YYYY-MM-DD. |
 | `status_sertifikat` | VARCHAR(50) | `status` | ENUM('on_going','expired','suspended') | `on_going` jika `tgl_kadaluarsa >= NOW()`. |
-| `file_pdf_path` | VARCHAR(255) | `url_pdf_sertifikat_lama` | TEXT | URL / relative path ke berkas PDF sertifikat lama di storage SIS. |
+| `file_pdf_path` | VARCHAR(255) | `url_pdf_sertifikat_lama` | TEXT | URL / relative path ke berkas PDF sertifikat lama atau URL PDF TTE baru. |
 
 ---
 

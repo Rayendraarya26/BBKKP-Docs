@@ -10,8 +10,8 @@
 
 ## 1. Sasaran & Tujuan Sprint (Sprint Goals)
 1. Menyiapkan skema database di `bbkkp_polimer` (`Db2`) untuk menampung entitas permohonan sertifikasi multi-item, komoditi/produk, dan profil lokasi pabrik.
-2. Mengimpor dan menstandarkan seluruh master data sertifikasi (Komoditi, Standar SNI/ISO, Kode EA/NACE, dan Tarif PNBP).
-3. Mengembangkan dan menguji script migrasi data ETL (*Extract, Transform, Load*) untuk memindahkan seluruh data pelanggan, perusahaan, pabrik, sertifikat aktif, dan riwayat permohonan dari `bbkkp_sis` ke `bbkkp_polimer`.
+2. Mengimpor dan menstandarkan seluruh master data sertifikasi (Komoditi, Standar SNI/ISO, Kode EA/NACE, dan Tarif PNBP) dari sistem pusat SIS.
+3. Mengembangkan dan menguji script migrasi data ETL (*Extract, Transform, Load*) serta fondasi *Two-Way Data Bridging* untuk sinkronisasi identitas pelanggan, profil perusahaan, pabrik, sertifikat aktif, dan transaksi antara `bbkkp_polimer` dan `bbkkp_sis` pusat.
 
 ---
 
@@ -30,21 +30,22 @@
 ### User Story 2: Import & Seeding Master Data Sertifikasi
 * **Sebagai**: Tim Administrasi & Marketing
 * **Saya ingin**: Master data komoditi, standar SNI/ISO, dan tarif PNBP tersedia lengkap di Polimer.
-* **Agar**: Pelanggan dapat memilih lingkup sertifikasi yang valid dan tim marketing dapat menetapkan tarif secara akurat.
+* **Agar**: Pelanggan dapat memilih lingkup sertifikasi yang valid dan tim marketing dapat menetapkan tarif secara akurat selaras dengan standar pusat.
 
 #### Kriteria Keberterimaan (Acceptance Criteria):
 - [ ] Seeder `SertifikasiMasterSeeder.php` berhasil mengimpor data komoditi dan standar dari database `bbkkp_sis`.
 - [ ] Master tarif PNBP tersinkronisasi dengan master jenis layanan dan lingkup layanan di Polimer.
 
-### User Story 3: Engine ETL Migrasi Data Historis & Sertifikat Aktif
-* **Sebagai**: Petugas Sertifikasi & Auditor
-* **Saya ingin**: Data sertifikat aktif dan riwayat permohonan dari `bbkkp-sis` termigrasi ke Polimer.
-* **Agar**: Pelanggan lama dapat langsung melihat sertifikat aktif mereka dan mengajukan perpanjangan/surveilans tanpa kehilangan riwayat masa lalu.
+### User Story 3: Engine ETL Migrasi Data Historis & Fondasi Bridging SIS Pusat
+* **Sebagai**: Petugas Sertifikasi & Tim IT
+* **Saya ingin**: Data sertifikat aktif dan riwayat permohonan dari `bbkkp-sis` termigrasi ke Polimer, serta tersedianya jembatan sinkronisasi dua arah.
+* **Agar**: Pelanggan lama dapat langsung melihat sertifikat aktif mereka di Polimer, sementara data di database SIS pusat tetap tersinkronisasi.
 
 #### Kriteria Keberterimaan (Acceptance Criteria):
 - [ ] Command Artisan `php artisan integration:migrate-sis-history` berjalan secara idempoten (bisa dijalankan ulang tanpa membuat duplikasi data).
 - [ ] Seluruh sertifikat aktif (`status = on_going`) termigrasi ke tabel `pelanggan_sertifikasi` lengkap dengan nomor sertifikat, tanggal terbit, masa berlaku, dan tautan file PDF lama.
 - [ ] Profil pabrik pelanggan lama termigrasi ke tabel `pelanggan_pabrik`.
+- [ ] Pemetaan identitas akun pengguna dan relasi ID SIS ke UUID Polimer tersimpan untuk kebutuhan *continuous bridging*.
 
 ---
 

@@ -90,8 +90,8 @@ gantt
 
 ---
 
-### 📍 Milestone 4: 2-Stage Audit, LKS Management, Committee, Certificate TTE & Cutover
-* **Target Fokus**: Workflow teknis sertifikasi internal (Penjadwalan Auditor, Audit Tahap 1 Dokumen, Audit Tahap 2 Pabrik, Penanganan LKS Tindakan Koreksi, Rapat Komite), penerbitan Sertifikat ber-TTE, monitoring surveilans, UAT, dan penghentian redirect legacy `bbkkp-sis`.
+### 📍 Milestone 4: 2-Stage Audit, LKS Management, Committee, Certificate TTE & Central Bridging Cutover
+* **Target Fokus**: Workflow teknis sertifikasi internal (Penjadwalan Auditor, Audit Tahap 1 Dokumen, Audit Tahap 2 Pabrik, Penanganan LKS Tindakan Koreksi, Rapat Komite), penerbitan Sertifikat ber-TTE, monitoring surveilans, finalisasi *two-way continuous bridging* ke SIS pusat, penghentian redirect legacy `bbkkp-sis`, dan UAT.
 * **Alokasi Waktu**: **Sprint 4 (Minggu 7 - 8)**
 
 #### 🎯 Sprint 4 Summary Tasks:
@@ -102,11 +102,12 @@ gantt
 | **TS4-03** | Interactive Flow | Modul Manajemen LKS (Laporan Ketidaksesuaian): Input temuan auditor, upload bukti perbaikan pelanggan, dan approval verifikasi auditor. | 8 | Fitur LKS di Portal & Admin |
 | **TS4-04** | Backend & TTE | Sub-modul Rapat Komite Sertifikasi & Issuer Engine Penerbitan Sertifikat Ber-TTE Kepala Balai via Repo Services. | 8 | Komite Review & TTE Sertifikat Engine |
 | **TS4-05** | Lifecycle & Scheduler | Manajemen Masa Berlaku Sertifikat & Scheduled Notification untuk Siklus Surveilans Tahunan (Tahun 1 & 2) serta Resertifikasi. | 3 | Scheduler Command & Dashboard Lifecycle |
-| **TS4-06** | Router & Cutover | Penghapusan URL Redirect ke `bbkkp-sis`, Final UAT, Security Review, dan Production Cutover. | 5 | Route Refactoring & System Cutover |
+| **TS4-06** | Router & Cutover | Penghapusan URL Redirect ke `bbkkp-sis`, Pengujian Keandalan Bridging ke SIS Pusat, Final UAT, dan Production Cutover. | 5 | Route Refactoring & Live System Cutover |
 
 * **Definition of Done (DoD) Sprint 4**:
   - Seluruh alur sertifikasi dari pendaftaran, audit 2 tahap, perbaikan LKS, rapat komite, hingga penerbitan sertifikat TTE berjalan 100% di Polimer.
-  - Redirect ke aplikasi legacy `bbkkp-sis` resmi dihentikan (*Decommissioned*).
+  - Redirect antarmuka legacy `bbkkp-sis` resmi dihentikan (*Decommissioned Legacy UI Redirects*).
+  - Sistem SIS Pusat Kementerian tetap aktif, berjalan normal, dan data transaksinya terus ter-update secara *real-time* via *Two-Way Bridging Engine*.
 
 ---
 

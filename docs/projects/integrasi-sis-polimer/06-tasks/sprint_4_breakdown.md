@@ -66,15 +66,16 @@
 - [ ] Otorisasi Kepala Balai memicu panggil Repo Services untuk pembubuhan TTE BSrE.
 - [ ] Sertifikat ber-TTE aktif tersimpan di tabel `pelanggan_sertifikasi` dan dapat diunduh oleh pelanggan di portal `/app/sertifikasi`.
 
-### User Story 5: Siklus Hidup Sertifikat, Surveilans & Decommissioning SIS
+#### User Story 5: Siklus Hidup Sertifikat, Surveilans, & Penghentian Redirect UI Lama
 * **Sebagai**: Administrator Sistem & Koordinator Sertifikasi
-* **Saya ingin**: Sistem memantau masa aktif sertifikat, menjadwalkan surveilans berkala, dan menonaktifkan redirect ke aplikasi legacy `bbkkp-sis`.
-* **Agar**: Polimer beroperasi secara mandiri sebagai Single Operation Hub (*Super App*).
+* **Saya ingin**: Sistem memantau masa aktif sertifikat, menjadwalkan surveilans berkala, mengalirkan data transaksi ke SIS pusat via bridging, dan menonaktifkan pengalihan (*redirect*) ke antarmuka web legacy `bbkkp-sis`.
+* **Agar**: Seluruh pengguna beraktivitas secara terpusat di Polimer (*Single Front-Door*), sementara sistem pusat Kementerian tetap menerima data operasional secara mutakhir.
 
 #### Kriteria Keberterimaan (Acceptance Criteria):
 - [ ] Scheduler otomatis (`sertifikasi:check-surveilans-cycle`) mengirimkan notifikasi H-60 dan H-30 sebelum jatuh tempo Surveilans Tahun 1 & 2.
-- [ ] Seluruh tombol dan rute pengalihan (*redirect*) ke URL legacy `bbkkp-sis` dihapus dari kode sumber Polimer.
+- [ ] Seluruh tombol dan rute pengalihan (*redirect*) ke antarmuka web `bbkkp-sis` dihapus dari kode sumber Polimer.
 - [ ] Rute pendaftaran dan operasional sertifikasi sepenuhnya berjalan *native* di Polimer.
+- [ ] Verifikasi keandalan *Two-Way Bridging*: Mutasi data transaksi di Polimer (status bayar, ST audit, LKS, sertifikat terbit) terbukti tersinkronisasi ke DB SIS pusat.
 
 ---
 
@@ -89,17 +90,21 @@ sequenceDiagram
     actor Komite as Tim Komite Sertifikasi
     actor KepalaBalai as Kepala Balai
     participant RepoService as Repo Services (TTE)
+    participant CentralSIS as SIS Pusat (Database)
 
     Note over Koord, Auditor: 1. Tahap Penugasan & Audit
     Koord->>Koord: Tunjuk Lead Auditor & Terbitkan Surat Tugas (ST)
+    Koord--)CentralSIS: Async Sync: Update Jadwal & Tim ke DB SIS
     Auditor->>Auditor: Input Hasil Audit Tahap 1 (Kecukupan Dokumen)
     Auditor->>Auditor: Laksanakan Audit Tahap 2 Lapangan & Sampling PPC
     
     Note over Auditor, Pelanggan: 2. Tahap Penanganan Temuan LKS
     alt Ditemukan Ketidaksesuaian (LKS)
         Auditor->>Pelanggan: Terbitkan Temuan LKS (Kategori Mayor/Minor + Due Date)
+        Auditor--)CentralSIS: Async Sync: Catat Temuan LKS ke DB SIS
         Pelanggan->>Pelanggan: Upload Analisis Akar Masalah & Bukti Tindakan Koreksi
         Auditor->>Auditor: Verifikasi Bukti Perbaikan (Status: Closed / Memadai)
+        Auditor--)CentralSIS: Async Sync: Update Status LKS Closed ke DB SIS
     end
 
     Note over Auditor, KepalaBalai: 3. Tahap Rapat Komite & Penerbitan Sertifikat TTE
@@ -109,6 +114,7 @@ sequenceDiagram
     KepalaBalai->>RepoService: Tanda Tangan Elektronik (TTE BSrE) via Repo Services
     RepoService-->>KepalaBalai: Sertifikat Signed (PDF + QR Verification)
     KepalaBalai->>Pelanggan: Terbitkan Sertifikat Aktif di Portal Pelanggan
+    KepalaBalai--)CentralSIS: Async Sync: Upsert Data Sertifikat Aktif ke DB SIS Pusat
 ```
 
 ---
@@ -124,8 +130,8 @@ sequenceDiagram
 | **TS4-04.1** | Komite Sertifikasi | Buat sub-modul sidang komite, input Berita Acara, dan tombol rekomendasi persetujuan. | 5 | Fullstack Dev | To Do |
 | **TS4-04.2** | Certificate TTE Issuer | Integrasikan engine pembuatan Sertifikat ber-TTE Kepala Balai melalui Repo Services API. | 5 | Backend Dev | To Do |
 | **TS4-05.1** | Surveilans Engine | Buat model lifecycle sertifikat dan Artisan command scheduler untuk reminder surveilans/resertifikasi. | 3 | Backend Dev | To Do |
-| **TS4-06.1** | Decommission Redirects | Hapus seluruh konfigurasi dan link redirect ke `bbkkp-sis` di routes, controllers, dan navigation views. | 3 | Fullstack Dev | To Do |
-| **TS4-06.2** | UAT & Production Cutover | Pelaksanaan User Acceptance Testing menyeluruh, security audit, dan deployment *cutover*. | 5 | QA & DevOps | To Do |
+| **TS4-06.1** | Decommission UI Redirects | Hapus seluruh link dan konfigurasi redirect ke antarmuka web `bbkkp-sis` pada navigasi dan controller Polimer. | 3 | Fullstack Dev | To Do |
+| **TS4-06.2** | Live Bridging UAT & Cutover | Pengujian menyeluruh kontinuitas sinkronisasi data ke SIS pusat, security audit, dan deployment *cutover*. | 5 | QA & DevOps | To Do |
 
 ---
 
@@ -137,6 +143,8 @@ sequenceDiagram
 php artisan test --filter=TechnicalAuditWorkflowTest
 # Menjalankan test modul komite dan penerbitan sertifikat TTE
 php artisan test --filter=CommitteeAndCertificateTteTest
+# Menjalankan test sinkronisasi dua arah ke DB SIS Pusat
+php artisan test --filter=TwoWayCentralSisSyncTest
 ```
 
 ### 5.2 Skenario Pengujian Manual (QA Checklist):
@@ -149,8 +157,9 @@ php artisan test --filter=CommitteeAndCertificateTteTest
    - Login sebagai `KOMITE_SERTIFIKASI` -> approve Berita Acara Sidang.
    - Login sebagai `KEPALA_BALAI` -> klik *Tanda Tangani Sertifikat (TTE)*.
    - Verifikasi bahwa PDF Sertifikat ber-TTE muncul di akun pelanggan dan valid saat diuji di `/tte/verify`.
-3. **Pengujian Verifikasi Decommissioning**:
-   - Cek seluruh menu navigasi, tombol permohonan sertifikasi di portal, dan routing aplikasi: pastikan tidak ada lagi redirect ke domain/port legacy `bbkkp-sis`.
+3. **Pengujian Verifikasi Penghentian Redirect & Kontinuitas SIS Pusat**:
+   - Cek seluruh menu navigasi, tombol permohonan sertifikasi di portal, dan routing aplikasi: pastikan tidak ada lagi redirect ke port/URL lama `bbkkp-sis`.
+   - Cek database `bbkkp_sis` pusat: pastikan permohonan, jadwal audit, dan sertifikat yang baru diproses di Polimer tercatat secara sinkron di tabel `sis_permohonan` dan `sis_sertifikat`.
 
 ---
 
@@ -158,5 +167,6 @@ php artisan test --filter=CommitteeAndCertificateTteTest
 * [x] Seluruh alur audit 2-tahap, manajemen LKS, dan sidang komite berjalan 100% di Polimer.
 * [x] Sertifikat resmi ber-TTE berhasil diterbitkan melalui Repo Services.
 * [x] Engine surveilans aktif memantau masa berlaku sertifikat.
-* [x] Pengalihan ke `bbkkp-sis` dinonaktifkan secara total (*Zero Redirects*).
+* [x] Pengalihan (*redirect*) ke antarmuka lama `bbkkp-sis` dinonaktifkan secara total (*Zero Redirects for Users*).
+* [x] Sistem SIS Pusat Kementerian tetap aktif beroperasi dan tersinkronisasi secara *real-time* via *Two-Way Bridging*.
 * [x] UAT Sign-Off disetujui oleh seluruh pihak terkait.
