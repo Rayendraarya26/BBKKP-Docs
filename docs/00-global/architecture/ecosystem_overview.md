@@ -89,13 +89,18 @@ graph TB
 * **Status**: **Active & Live Central System**. Sistem dan database SIS tetap beroperasi normal untuk menjamin kepatuhan pelaporan terpusat, interoperabilitas data nasional, dan audit pusat.
 * **Akses Pengguna**: Pengguna BBKKP dialihkan menggunakan Polimer sebagai *front-end*, sementara backend/database SIS terus dimutakhirkan secara otomatis melalui *Data Bridging Engine*.
 
-### 3.3. DB & Queue Infrastructure
-* **MySQL Database**: Dipisahkan antara DB Polimer (`bbkkp_polimer`) dan DB SIS Pusat (`bbkkp_sis`).
+### 3.3. BBKKP Internal Service (`bbkkp-internal-service`)
+* **Peran**: *Dedicated high-performance microservice* (Laravel 11 + Octane FrankenPHP) untuk layanan bersama TTE BSrE, manajemen berkas PDF di S3, verifikasi integritas dokumen, dan gateway pembayaran terpusat.
+* **Status**: **Active Production Service**.
+* **Dokumentasi Proyek**: [BBKKP Internal Service Documentation](../../projects/bbkkp-internal-service/_index.md).
+
+### 3.4. DB & Queue Infrastructure
+* **MySQL Database**: Dipisahkan antara DB Polimer (`bbkkp_polimer`), DB SIS Pusat (`bbkkp_sis`), dan DB Internal Service (`bbkkp_esign`).
 * **Redis**: Digunakan untuk manajemen sesi pengguna dan *distributed queue* untuk background synchronization, pengiriman notifikasi WhatsApp, serta pemanggilan API TTE BSrE dan BNI VA secara asinkron.
 
-### 3.4. Integration Services (Pihak Ke-3)
+### 3.5. Integration Services (Pihak Ke-3)
 1. **BNI Virtual Account**: Menerima callback status pembayaran otomatis (*Real-time Webhook Notification*).
-2. **BSrE E-Sign (BSSN)**: Melakukan verifikasi dan pembubuhan TTE berstandar hukum pada file PDF Invoice, Kwitansi, dan Sertifikat.
+2. **BSrE E-Sign (BSSN)**: Melakukan verifikasi dan pembubuhan TTE berstandar hukum pada file PDF Invoice, Kwitansi, dan Sertifikat via `bbkkp-internal-service`.
 3. **WhatsApp Gateway**: Pengiriman notifikasi tagihan VA, bukti kwitansi lunas, peringatan perbaikan LKS, dan terbit sertifikat ke WhatsApp pelanggan.
 
 ---
@@ -114,5 +119,7 @@ Dalam strategi *Co-Existence* Polimer & SIS Pusat:
 ## 5. Dokumen Referensi Terkait
 * **[SOP Git Dual-Remote Workflow](../standards/git_dual_remote_workflow.md)**
 * **[Coding & Security Guidelines](../standards/coding_guidelines.md)**
+* **[BBKKP Internal Service Documentation](../../projects/bbkkp-internal-service/_index.md)**
 * **[Spesifikasi Migrasi DB SIS ke Polimer](../../projects/integrasi-sis-polimer/02-architecture/db_schema_migration.md)**
 * **[Functional Requirements Document (FRD) Integrasi](../../projects/integrasi-sis-polimer/01-product/frd_integrasi.md)**
+
