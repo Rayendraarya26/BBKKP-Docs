@@ -20,19 +20,20 @@ Sistem ini mengintegrasikan seluruh workflow layanan publik—mulai dari pendaft
 | Komponen | Teknologi / Library Utama | Keterangan |
 | :--- | :--- | :--- |
 | **Backend Framework** | PHP 8.2+, Laravel 11.9 | Framework PHP modern dengan arsitektur modular |
-| **Modular Engine** | `nwidart/laravel-modules` (v11) | Pemisahan kode menjadi 7 modul independen |
-| **Frontend SPA** | React 18, TypeScript, Vite | Digunakan untuk portal pelanggan (`/app`) |
-| **State Management** | Redux Toolkit (`@reduxjs/toolkit`, `react-redux`) | Manajemen state pada aplikasi React |
-| **UI Components & Styling** | Bootstrap 5, `react-bootstrap`, `styled-components` | Styling antarmuka pengguna modern |
-| **Form & Validation** | `react-hook-form`, `yup`, `@hookform/resolvers` | Manajemen form dan validasi data frontend |
+| **Modular Engine** | `nwidart/laravel-modules` (v11) | Pemisahan kode menjadi 7 modul domain-driven |
+| **Frontend SPA** | React 18, TypeScript, Vite 5.3 | Digunakan untuk portal pelanggan (`/app`) dan admin live UI |
+| **Styling & UI Kit** | Tailwind CSS 3.4, PostCSS, Lucide Icons | Antarmuka kustom terpadu (AppShell, AdminShell, Modal, DataTable, Card) |
+| **Data Fetching & Cache** | TanStack React Query (`@tanstack/react-query`) | Optimistic updates, background revalidation, & unified cache layer |
+| **Form & Validation** | `react-hook-form`, `yup`, `@hookform/resolvers` | Manajemen validasi form multi-step wizard & dynamic items |
 | **Database Primary** | MySQL / MariaDB (`bbkkp_polimer`) | Database utama portal |
-| **Multi-DB Connection** | `apps`, `puk`, `sil`, `sis` | Koneksi ke DB Intranet, Pelatihan, Lab, & Sertifikasi |
-| **API Auth** | Laravel Passport (OAuth2) | Autentikasi API aman untuk pelanggan & integrasi |
-| **Electronic Signature** | `dolkode/bbkkp-sdk-esign-service-php` | SDK Integrasi TTE BSrE / Kemenperin |
-| **PDF Engine** | `barryvdh/laravel-dompdf` | Generasi dokumen Invoice, Kuitansi, & Sertifikat |
+| **Legacy Multi-DB** | `bbkkp_sis`, `apps`, `puk`, `sil` | Koneksi ke DB SIS Legacy, Pelatihan, Lab, & Sertifikasi |
+| **Payment Gateway** | BNI e-Collection Virtual Account | Double XOR encryption, webhook idempotency, & async queue |
+| **Electronic Signature** | HTTP Client ➡️ `bbkkp-internal-service` | FrankenPHP Octane (Port 10020) + BSrE BSSN Engine & MD5 Checksum |
+| **PDF Engine** | `barryvdh/laravel-dompdf` | Generasi dokumen Invoice, Kuitansi ber-QR, & Sertifikat TTE |
+| **Queue & Worker** | Redis (`phpredis`) | Pemrosesan background invoice, kuitansi, & notifikasi async |
 | **Object Storage** | `league/flysystem-aws-s3-v3` (S3 / MinIO) | Storage berkas digital (`storage.bbkkp.kemenperin.go.id`) |
-| **Error Tracking** | Sentry (`sentry/sentry-laravel`) | Tracking log error server & trace aplikasi |
-| **Notifikasi** | WhatsApp Cast API & Web Notification | Pengiriman OTP & status via WhatsApp |
+| **Error Tracking** | Sentry (`sentry/sentry-laravel`) | Tracking log error server & trace performa transaksi |
+| **Notifikasi & OTP** | WhatsApp Cast API & Web Notification | Pengiriman OTP login, status VA, & progress workflow |
 
 ---
 

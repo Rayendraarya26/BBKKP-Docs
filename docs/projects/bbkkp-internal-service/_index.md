@@ -62,7 +62,8 @@ graph TD
 
 Dokumentasi lengkap BBKKP Internal Service diatur ke dalam beberapa bagian:
 
-1. **[Product & Functional Specifications](./01-product/frd_internal_service.md)**: Analisis kebutuhan fungsional, use case, dan roadmap layanan (Payment Service).
-2. **[System Architecture & Data Model](./02-architecture/system_architecture.md)**: Arsitektur mendalam, containerization, queue lifecycle, dan skema database.
-3. **[API Specifications & OpenAPI Guide](./02-architecture/api_specifications.md)**: Referensi lengkap endpoint REST API, parameter, dan contoh payload request/response.
-4. **[Deployment & Operations Guide](./05-operations/deployment_and_setup.md)**: Panduan konfigurasi Docker, environment variable, database migration, dan queue worker.
+1. **[Changelog Layanan](./changelog_internal_service.md)**: Log integrasi & operasional service 4 hari terakhir (18 - 21 Agustus 2026).
+2. **[Product & Functional Specifications](./01-product/frd_internal_service.md)**: Analisis kebutuhan fungsional, use case, dan roadmap layanan (Payment Service).
+3. **[System Architecture & Data Model](./02-architecture/system_architecture.md)**: Arsitektur mendalam, containerization, queue lifecycle, dan skema database.
+4. **[API Specifications & OpenAPI Guide](./02-architecture/api_specifications.md)**: Referensi lengkap endpoint REST API, parameter, dan contoh payload request/response.
+5. **[Deployment & Operations Guide](./05-operations/deployment_and_setup.md)**: Panduan konfigurasi Docker, environment variable, database migration, dan queue worker.
