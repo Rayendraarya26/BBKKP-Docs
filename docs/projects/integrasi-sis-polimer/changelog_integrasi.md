@@ -50,3 +50,12 @@ graph LR
 ### 3. Dukungan Multi-Item Certification (21 Agustus 2026)
 * **Penyesuaian Skema Pengajuan**:
   * Memperluas skema bridging untuk mendukung 1 transaksi permohonan dengan banyak varian produk/SNI, memetakan tiap item ke baris komoditi terkait di SIS.
+
+### 4. Verifikasi & Stabilisasi Integrasi Lokal (30 Agustus 2026)
+* **Optimasi Seeding & Skema Database**:
+  * Batch insert seeder wilayah SIS (`MasterVillageSeeder`) dan Polimer (`MasterDistrictSeeder`) dipercepat hingga hitungan detik.
+  * Penambahan auto-increment pada primary key komoditi dan sertifikasi di database `bbkkp_sis`.
+* **Pengujian Dua Arah & Automated Test Suite**:
+  * Eksekusi `integration:sync-sertifikasi-sis` berhasil 100% (12 permohonan tersinkronisasi ke SIS tanpa kegagalan).
+  * 100% Automated Feature & Unit Test terkait sertifikasi, bridging SIS, TTE digital signing, sidang komite, dan audit lolos (*all tests passed*).
+  * Verifikasi ketersediaan web lokal Polimer (port `4900`) dan SIS (port `4800`).
