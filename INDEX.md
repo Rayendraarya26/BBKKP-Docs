@@ -79,8 +79,10 @@ Dokumen standar teknis, aturan pengkodean, keamanan database/RBAC, dan SOP alur 
 
 | Dokumen | Path | Deskripsi |
 |---|---|---|
-| Changelog Integrasi | [changelog_integrasi.md](docs/projects/integrasi-sis-polimer/changelog_integrasi.md) | Log aktivitas integrasi & bridging (18 - 21 Agustus 2026) |
+| Changelog Integrasi | [changelog_integrasi.md](docs/projects/integrasi-sis-polimer/changelog_integrasi.md) | Log aktivitas integrasi & bridging (termasuk update 01 September 2026) |
+| Panduan Alur Marketing & Invoicing | [panduan_alur_marketing_invoicing_tte_sis.md](docs/projects/integrasi-sis-polimer/01-product/panduan_alur_marketing_invoicing_tte_sis.md) | Panduan lengkap pengguna & pengembang: Verifikasi Marketing, TTE on-demand & SIS |
 | FRD Integrasi SIS & Polimer | [frd_integrasi.md](docs/projects/integrasi-sis-polimer/01-product/frd_integrasi.md) | Spesifikasi fungsional integrasi data Polimer & SIS |
+| Arsitektur Invoicing & TTE Bridging | [alur_invoicing_kuitansi_tte_bridging.md](docs/projects/integrasi-sis-polimer/02-architecture/alur_invoicing_kuitansi_tte_bridging.md) | Desain teknis alur invoicing otomatis, TTE on-demand BSrE, dan data bridging SIS |
 | DB Schema & Migration Spec | [db_schema_migration.md](docs/projects/integrasi-sis-polimer/02-architecture/db_schema_migration.md) | Pemetaan skema DB SIS ke Polimer & spec artisan command idempoten |
 | Target Milestone Integrasi | [milestone.md](docs/projects/integrasi-sis-polimer/06-tasks/milestone.md) | Timeline & target milestone sprint integrasi |
 | Sprint 1 Breakdown | [sprint_1_breakdown.md](docs/projects/integrasi-sis-polimer/06-tasks/sprint_1_breakdown.md) | Rincian tugas Sprint 1: Integrasi Akun & Sertifikat SIS |
