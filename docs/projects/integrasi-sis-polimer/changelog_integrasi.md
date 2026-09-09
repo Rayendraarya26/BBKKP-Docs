@@ -69,3 +69,16 @@ graph LR
   * **Step 5 (Portal Pemohon)**: Tombol *"Minta TTE"* untuk Invoice dan Kuitansi pada `PembayaranPage.tsx` dan `DetailPermohonanPage.tsx` lengkap dengan indikator badge status TTE (*TTE BSrE Sah*, *Menunggu TTE*, *Digital Seal*).
   * **Step 6 (Bridging SIS & BSKJI)**: Integrasi `SisSyncBridgingService.php`, background queue `GenerateKwitansiDigitalJob.php`, tombol trigger manual `POST /integrasi/sync-manual-sis/{id}`, dan verifikasi 100% automated tests suite.
 
+### 6. Auto-Dispatch Permohonan, Webhook Receiver, & Milestone Tracking (07 - 09 September 2026)
+* **Modul Terdedikasi `Modules/Webhook` (`798c6ac`, `1aca9f7`)**:
+  * Implementasi `WebhookReceiverController.php` untuk menerima push notification status dari SIS (`POST /webhook/sis/sync`).
+  * `SisSyncBridgingService.php` disempurnakan untuk auto-dispatch permohonan sertifikasi begitu verifikasi administrasi Tahap 1 disetujui marketing.
+  * Background queue worker `DispatchPermohonanToSisJob.php` dan `SyncPermohonanToSisJob.php`.
+  * Proteksi keamanan endpoint menggunakan `VerifyWebhookSignature.php` (HMAC validation).
+* **Tabel Audit Trail & Milestone Tracking**:
+  * Migrasi database `integration_logs` (`IntegrationLog.php`) mencatat log audit transaksi API SIS.
+  * Migrasi `permohonan_tracking_logs` (`PermohonanTrackingLog.php`) merekam tahapan milestone hidup permohonan secara komprehensif.
+  * Migrasi `permohonan_penawaran_biaya` (`PermohonanPenawaranBiaya.php`) mengelola data surat penawaran biaya yang diterbitkan ke pelanggan.
+* **Status Admin Backoffice (WIP oleh permanaff)**:
+  * Rute untuk sub-modul `tagihan-biaya` (`TagihanBiayaController`) telah didaftarkan di `Modules/Permohonan/routes/web.php` dan controller sedang dalam tahap penulisan aktif.
+
