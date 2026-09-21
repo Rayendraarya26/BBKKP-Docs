@@ -8,9 +8,12 @@ Folder ini berisi seluruh dokumentasi spesifik untuk aplikasi **BBKKP Polimer**.
 ## Dokumen Project:
 * **Changelog & Log Perubahan**:
   * [`changelog_polimer.md`](changelog_polimer.md) — Log kronologis perubahan commit & fitur (18 - 21 Agustus 2026).
+* **`01-product/`**:
+  * [`frd_form_pengujian_laboratorium.md`](01-product/frd_form_pengujian_laboratorium.md) — FRD Form Pengujian Laboratorium Sisi Klien (Self-Service 4-Step Wizard).
 * **`02-architecture/`**:
   * [`system_overview.md`](02-architecture/system_overview.md) — Arsitektur & modul aplikasi Polimer.
   * [`multi_sertifikasi_architecture.md`](02-architecture/multi_sertifikasi_architecture.md) — Arsitektur pengajuan multi-sertifikasi & 4-step wizard.
+  * [`form_pengujian_laboratorium.md`](02-architecture/form_pengujian_laboratorium.md) — Arsitektur Form Pengujian Laboratorium Sisi Klien (4-Step Wizard, Multi-Sample, BNI VA).
   * [`admin_helpdesk_system.md`](02-architecture/admin_helpdesk_system.md) — Sistem manajemen tiket helpdesk admin & notifikasi.
   * [`bni_va_payment_flow.md`](02-architecture/bni_va_payment_flow.md) — Arsitektur pembayaran BNI e-Collection VA & webhook.
   * [`tte_internal_service_integration.md`](02-architecture/tte_internal_service_integration.md) — Integrasi TTE BSrE decoupled via internal service.

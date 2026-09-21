@@ -1,7 +1,7 @@
 # 📜 Changelog Proyek: BBKKP Polimer (`bbkkp-polimer`)
 
 > **Repositori**: `Rayendraarya26/private-polimer` / `bakulkapas/bbkkp-polimer`  
-> **Periode Log**: 18 Agustus 2026 s/d 09 September 2026  
+> **Periode Log**: 18 Agustus 2026 s/d 17 September 2026  
 > **Branch Aktif**: `polimer_sis`  
 > **Kontributor Terakhir**: Fajar Permana Putra / Permanaff (`fajar.permanaf314@gmail.com`)  
 > **Teknologi Utama**: Laravel 11, React 18 (TypeScript), Tailwind CSS, TanStack Query, BNI e-Collection, SIS Bridging
@@ -11,6 +11,7 @@
 ## 📑 Ringkasan Log Harian
 
 ```
+wip-pengujian (2026-09-17 09:55) docs(pengujian): spesifikasi arsitektur & FRD form permohonan pengujian laboratorium sisi klien
 1aca9f7 (2026-09-09 09:05) feat(core): implement bridging SIS, multi-sertifikasi flow, BNI VA payment, and dual-rail sidebar UI
 798c6ac (2026-09-07 15:43) feat(integration): add auto-dispatch permohonan to SIS, webhook receiver, and sync master komoditi
 cc59b07 (2026-09-02 15:33) refactor: rename services and update port mappings in docker-compose.yml
@@ -67,6 +68,19 @@ c8ff4a3 (2026-08-18 06:19) fix: invoice template rendering
 ---
 
 ## 🔍 Detail Perubahan Berdasarkan Hari & Fitur
+
+### 📅 17 September 2026
+
+#### 1. Form Pengujian Laboratorium Sisi Klien (`bbkkp-polimer`)
+* **Spesifikasi & Dokumentasi Arsitektur**:
+  * Penyusunan dokumen arsitektur komprehensif: [`form_pengujian_laboratorium.md`](02-architecture/form_pengujian_laboratorium.md) yang mendefinisikan sistem pengajuan mandiri pengujian lab, 4-step wizard, model relasi data ERD, spesifikasi endpoint API, dan arsitektur master data hybrid proxy SIS + local DB fallback.
+  * Penyusunan Functional Requirements Document: [`frd_form_pengujian_laboratorium.md`](01-product/frd_form_pengujian_laboratorium.md) mencakup FR-01 s/d FR-04, 5 aturan bisnis (business rules), serta kriteria penerimaan (acceptance criteria).
+  * Formalisasi 5 keputusan desain:
+    1. Master Data komoditas & parameter uji menggunakan Proxy API ke SIS/SIL dengan proteksi fallback tabel lokal.
+    2. Deteksi tarif mahasiswa via dropdown manual dengan kewajiban unggah berkas KTM di Step 4.
+    3. Eliminasi field Analis Penerima STPCU dari form sisi klien (ranah internal lab).
+    4. Fasilitasi opsi pembayaran "Dibayar di Belakang" dengan penandaan verifikasi kelayakan MoU oleh admin.
+    5. Opsi Permintaan Evaluasi & Menyaksikan Pengujian menggunakan toggle Yes/No interaktif dengan field catatan spesifikasi/kehadiran.
 
 ### 📅 09 September 2026
 

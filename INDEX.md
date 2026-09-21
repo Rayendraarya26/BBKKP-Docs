@@ -42,8 +42,10 @@ Dokumen standar teknis, aturan pengkodean, keamanan database/RBAC, dan SOP alur 
 | Dokumen | Path | Deskripsi |
 |---|---|---|
 | Changelog Polimer | [changelog_polimer.md](docs/projects/bbkkp-polimer/changelog_polimer.md) | Log kronologis seluruh commit & fitur Polimer (18 - 21 Agustus 2026) |
+| FRD Form Pengujian Laboratorium | [frd_form_pengujian_laboratorium.md](docs/projects/bbkkp-polimer/01-product/frd_form_pengujian_laboratorium.md) | Spesifikasi fungsional form pengujian mandiri sisi klien (4-step wizard) |
 | System Overview Polimer | [system_overview.md](docs/projects/bbkkp-polimer/02-architecture/system_overview.md) | Arsitektur & modul aplikasi BBKKP Polimer |
 | Multi-Sertifikasi Architecture | [multi_sertifikasi_architecture.md](docs/projects/bbkkp-polimer/02-architecture/multi_sertifikasi_architecture.md) | Arsitektur pengajuan multi-sertifikasi & 4-step wizard |
+| Form Pengujian Architecture | [form_pengujian_laboratorium.md](docs/projects/bbkkp-polimer/02-architecture/form_pengujian_laboratorium.md) | Arsitektur pengajuan pengujian lab mandiri, multi-sample & BNI VA |
 | Admin Helpdesk System | [admin_helpdesk_system.md](docs/projects/bbkkp-polimer/02-architecture/admin_helpdesk_system.md) | Sistem manajemen tiket helpdesk admin & notifikasi badge |
 | BNI VA Payment Flow | [bni_va_payment_flow.md](docs/projects/bbkkp-polimer/02-architecture/bni_va_payment_flow.md) | Arsitektur pembayaran BNI e-Collection VA, webhook & queue |
 | TTE Internal Service Integration | [tte_internal_service_integration.md](docs/projects/bbkkp-polimer/02-architecture/tte_internal_service_integration.md) | Integrasi TTE BSrE decoupled via mikroservis internal |
