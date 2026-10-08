@@ -11,6 +11,7 @@
 ## 📑 Ringkasan Log Harian
 
 ```
+ea25220 (2026-10-08 12:31) feat(eksternal): implement update and ajukanUlang revision lifecycle for 6 secondary services
 8ead9d8 (2026-10-08 10:02) fix(eksternal): implement previewHasilUji, clean up orphan detail_pembayaran, and verify draft ownership
 8cb376d (2026-10-08 10:01) fix(security): enforce RBAC for Bendahara on TTE endpoints and mask NIK in logs
 e30ac6c (2026-10-08 10:00) fix(permohonan): expand bulkApprove match cases, persist total_harga, and include CERT prefix in sertifikasi filter
@@ -100,6 +101,13 @@ c8ff4a3 (2026-08-18 06:19) fix: invoice template rendering
      - Implementasi method `previewHasilUji()` pada `SertifikasiController` untuk preview dokumen LHU.
      - Cascade delete `DetailPembayaran` saat penghapusan draft permohonan LSP dan Pelatihan.
      - Proteksi kepemilikan data (`created_by === auth()->id()`) untuk mencegah potensi IDOR.
+  6. `ea25220` — `feat(eksternal): implement update and ajukanUlang revision lifecycle for 6 secondary services`:
+     - Implementasi lengkap workflow perbaikan formulir (`update` dan `ajukanUlang`) untuk: Inspeksi Teknis (`InspeksiController`), Sertifikasi Halal (`HalalController`), Pengujian Laboratorium (`PengujianController`), Verifikasi GRK (`GrkController`), Validasi GRK (`GrkValidasiController`), Sewa Miniplant (`MiniplantController`), dan PUP (`PupController`).
+     - Mitigasi IDOR dengan validasi kepemilikan (`$permohonan->created_by === $userId` atau otorisasi pegawai).
+     - Atomic execution dalam `DB::beginTransaction()` dengan full rollback saat exception.
+     - Transisi status terstandardisasi: validasi status awal `PERMOHONAN_PERLU_PERBAIKAN`, reset ke `PERMOHONAN`, pembaruan `tgl_order = now()`, pencatatan milestone `PERMOHONAN_DIAJUKAN_ULANG` di `PermohonanTrackingLog`, dan notifikasi database ke admin staff.
+     - Rekalkulasi biaya spesifik layanan (sampel/parameter pada pengujian, durasi/alat pada miniplant, bundling discount pada PUP).
+     - Pendaftaran rute PUT/POST `update` dan POST `ajukan-ulang` di `Modules/Eksternal/routes/web.php`.
 
 ### 📅 17 September 2026
 
