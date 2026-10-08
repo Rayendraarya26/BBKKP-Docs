@@ -1,0 +1,664 @@
+{
+	"info": {
+		"_postman_id": "sippt-bskji-api-v13",
+		"name": "SIPPT BSKJI API v13 — BBKKP Polimer Integration",
+		"description": "Koleksi lengkap API Sistem Informasi Pelayanan Publik Terpadu (SIPPT) BSKJI Kemenperin.\n\n**Cara Penggunaan:**\n1. Set variabel `base_url`, `username`, `password`, `id_satker` di tab Variables\n2. Jalankan request \"1. Login\" untuk mendapatkan token\n3. Token otomatis tersimpan di variabel `bearer_token`\n4. Jalankan endpoint lain yang sudah auto-attach token\n\n**Urutan Testing:**\n1. Login → 2. List Satker → 3. Master Data → 4. Insert Data → 5. Non-Aktif",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{ "key": "base_url", "value": "https://newtesting-bskji.kemenperin.go.id/api", "type": "string" },
+		{ "key": "username", "value": "ISI_USERNAME_DISINI", "type": "string" },
+		{ "key": "password", "value": "ISI_PASSWORD_DISINI", "type": "string" },
+		{ "key": "bearer_token", "value": "", "type": "string" },
+		{ "key": "id_satker", "value": "ISI_ID_SATKER_4_DIGIT", "type": "string" }
+	],
+	"item": [
+		{
+			"name": "01 — Autentikasi",
+			"item": [
+				{
+					"name": "1. Login (Get Bearer Token)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set('bearer_token', jsonData.token);",
+									"    console.log('✅ Token tersimpan:', jsonData.token.substring(0, 20) + '...');",
+									"} else if (jsonData.data && jsonData.data.token) {",
+									"    pm.collectionVariables.set('bearer_token', jsonData.data.token);",
+									"    console.log('✅ Token tersimpan (nested)');",
+									"} else if (jsonData.access_token) {",
+									"    pm.collectionVariables.set('bearer_token', jsonData.access_token);",
+									"    console.log('✅ Token tersimpan (access_token)');",
+									"} else {",
+									"    console.log('⚠️ Token tidak ditemukan. Response:', JSON.stringify(jsonData));",
+									"}",
+									"pm.test('Login berhasil', function () { pm.response.to.have.status(200); });",
+									"pm.test('Response memiliki token', function () {",
+									"    pm.expect(jsonData.token || (jsonData.data && jsonData.data.token) || jsonData.access_token).to.not.be.undefined;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{username}}\",\n    \"password\": \"{{password}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": ["{{base_url}}"],
+							"path": ["login"]
+						},
+						"description": "Login untuk mendapatkan Bearer Token. Token otomatis disimpan ke variabel bearer_token."
+					}
+				}
+			]
+		},
+		{
+			"name": "02 — Master Data (GET)",
+			"item": [
+				{
+					"name": "2. List Satuan Kerja",
+					"event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', function () { pm.response.to.have.status(200); });", "console.log('Response:', JSON.stringify(pm.response.json()).substring(0, 500));"], "type": "text/javascript" } }],
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" }
+						],
+						"url": { "raw": "{{base_url}}/list_satker", "host": ["{{base_url}}"], "path": ["list_satker"] },
+						"description": "Daftar seluruh Satuan Kerja. Gunakan untuk validasi ID Satker."
+					}
+				},
+				{
+					"name": "3. List Negara",
+					"event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', function () { pm.response.to.have.status(200); });", "console.log('Contoh data:', JSON.stringify(pm.response.json()).substring(0, 500));"], "type": "text/javascript" } }],
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" }
+						],
+						"url": { "raw": "{{base_url}}/list_negara", "host": ["{{base_url}}"], "path": ["list_negara"] },
+						"description": "Daftar kode negara. Catat struktur response untuk mapping kode_negara."
+					}
+				},
+				{
+					"name": "4. List Provinsi",
+					"event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', function () { pm.response.to.have.status(200); });", "console.log('Contoh data:', JSON.stringify(pm.response.json()).substring(0, 500));"], "type": "text/javascript" } }],
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" }
+						],
+						"url": { "raw": "{{base_url}}/list_provinsi", "host": ["{{base_url}}"], "path": ["list_provinsi"] },
+						"description": "Daftar kode provinsi."
+					}
+				},
+				{
+					"name": "5. List Kabupaten/Kota (per Provinsi)",
+					"event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', function () { pm.response.to.have.status(200); });", "console.log('Contoh data:', JSON.stringify(pm.response.json()).substring(0, 500));"], "type": "text/javascript" } }],
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" }
+						],
+						"url": { "raw": "{{base_url}}/list_kabupaten_kota/33", "host": ["{{base_url}}"], "path": ["list_kabupaten_kota", "33"] },
+						"description": "Daftar kabupaten/kota berdasarkan kode provinsi. Ganti 33 dengan kode provinsi yang valid."
+					}
+				}
+			]
+		},
+		{
+			"name": "03 — Modul Layanan (INSERT)",
+			"item": [
+				{
+					"name": "7. Pengujian — Insert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/PUJ/2026/00001\",\n        \"nama_pelanggan\": \"PT. TEST POSTMAN\",\n        \"jenis_pelanggan\": \"INDUSTRI\",\n        \"jenis_klasifikasi\": \"KIMIA\",\n        \"tanggal_order\": \"08-10-2026\",\n        \"tanggal_selesai\": \"10-10-2026\",\n        \"keterangan_uji\": \"Test pengujian via Postman\",\n        \"keterangan_lainnya\": \"\",\n        \"uraian_pengujian\": \"Pengujian sampel untuk validasi integrasi API\",\n        \"total_bayar\": \"500000\",\n        \"jml_sample\": \"2\",\n        \"tanggal_bayar\": \"08-10-2026\",\n        \"tanggal_pengesahan\": \"10-10-2026\",\n        \"kode_negara\": \"62\",\n        \"kode_provinsi\": \"33\",\n        \"kode_kabupaten\": \"3374\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/pengujian/insert/{{id_satker}}", "host": ["{{base_url}}"], "path": ["pengujian", "insert", "{{id_satker}}"] },
+						"description": "Insert data pengujian.\n\nJenis Klasifikasi: FISIKA, KIMIA, MEKANIK, MIKROBIOLOGI, LINGKUNGAN, ELEKTRONIKA, TELEMATIKA, KELISTRIKAN\n\n⚠️ Setelah test, jalankan non_aktif untuk hapus data test."
+					}
+				},
+				{
+					"name": "8. Kalibrasi — Insert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/KAL/2026/00001\",\n        \"nama_pelanggan\": \"PT. TEST POSTMAN\",\n        \"jenis_pelanggan\": \"INDUSTRI\",\n        \"jenis_klasifikasi\": \"SUHU DAN KELEMBABAN\",\n        \"tanggal_order\": \"08-10-2026\",\n        \"tanggal_selesai\": \"10-10-2026\",\n        \"keterangan_kalibrasi\": \"Test kalibrasi via Postman\",\n        \"keterangan_lainnya\": \"\",\n        \"uraian_kalibrasi\": \"Kalibrasi alat untuk validasi API\",\n        \"total_bayar\": \"300000\",\n        \"jml_alat\": \"1\",\n        \"tanggal_bayar\": \"08-10-2026\",\n        \"tanggal_pengesahan\": \"10-10-2026\",\n        \"kode_negara\": \"62\",\n        \"kode_provinsi\": \"33\",\n        \"kode_kabupaten\": \"3374\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/kalibrasi/insert/{{id_satker}}", "host": ["{{base_url}}"], "path": ["kalibrasi", "insert", "{{id_satker}}"] },
+						"description": "Insert data kalibrasi.\n\nJenis Klasifikasi: SUHU DAN KELEMBABAN, MASSA DAN BESARAN TERKAIT, PANJANG DAN BESARAN TERKAIT, KELISTRIKAN DAN KEMAGNETAN, WAKTU DAN FREKUENSI, AKUSTIK DAN GETARAN, FOTOMETRI DAN RADIOMETRI, INSTRUMEN PENGUJIAN, RADIASI PENGIONAN, PERALATAN KESEHATAN"
+					}
+				},
+				{
+					"name": "9. Sertifikasi — Insert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/SER/2026/00001\",\n        \"nama_pelanggan\": \"PT. TEST POSTMAN\",\n        \"jenis_pelanggan\": \"INDUSTRI\",\n        \"jenis_sertifikasi\": \"PRODUK\",\n        \"tanggal_order\": \"08-10-2026\",\n        \"tanggal_selesai\": \"10-10-2026\",\n        \"keterangan_sertifikasi\": \"Test sertifikasi via Postman\",\n        \"uraian_sertifikasi\": \"Sertifikasi produk untuk validasi API\",\n        \"keterangan_lainnya\": \"\",\n        \"total_bayar\": \"750000\",\n        \"jml_sertifikat\": \"1\",\n        \"tanggal_bayar\": \"08-10-2026\",\n        \"tanggal_pengesahan\": \"10-10-2026\",\n        \"kode_negara\": \"62\",\n        \"kode_provinsi\": \"33\",\n        \"kode_kabupaten\": \"3374\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/sertifikasi/insert/{{id_satker}}", "host": ["{{base_url}}"], "path": ["sertifikasi", "insert", "{{id_satker}}"] },
+						"description": "Insert data sertifikasi.\n\nJenis Sertifikasi: PRODUK, SISTEM MANAJEMEN MUTU, INDUSTRI HIJAU, PROFESI, EKOLABEL, SKEM, SISTEM HACCP, SISTEM K3, SISTEM MANAJEMEN LINGKUNGAN, SISTEM MANAJEMEN KEAMANAN PANGAN, LAINNYA"
+					}
+				},
+				{
+					"name": "10. Pelatihan — Insert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/PEL/2026/00001\",\n        \"nama_pelanggan\": \"PT. TEST POSTMAN\",\n        \"jenis_pelanggan\": \"INDUSTRI\",\n        \"tanggal_order\": \"08-10-2026\",\n        \"tanggal_selesai\": \"10-10-2026\",\n        \"keterangan_pelatihan\": \"Test pelatihan via Postman\",\n        \"keterangan_lainnya\": \"\",\n        \"uraian_pelatihan\": \"Pelatihan untuk validasi API\",\n        \"total_bayar\": \"1000000\",\n        \"jml_peserta\": \"5\",\n        \"tanggal_bayar\": \"08-10-2026\",\n        \"tanggal_pengesahan\": \"10-10-2026\",\n        \"kode_negara\": \"62\",\n        \"kode_provinsi\": \"33\",\n        \"kode_kabupaten\": \"3374\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/pelatihan/insert/{{id_satker}}", "host": ["{{base_url}}"], "path": ["pelatihan", "insert", "{{id_satker}}"] },
+						"description": "Insert data pelatihan."
+					}
+				},
+				{
+					"name": "11. Inspeksi — Insert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/INS/2026/00001\",\n        \"nama_pelanggan\": \"PT. TEST POSTMAN\",\n        \"jenis_pelanggan\": \"INDUSTRI\",\n        \"tanggal_order\": \"08-10-2026\",\n        \"tanggal_selesai\": \"10-10-2026\",\n        \"keterangan_inspeksi\": \"Test inspeksi via Postman\",\n        \"keterangan_lainnya\": \"\",\n        \"uraian_inspeksi\": \"Inspeksi untuk validasi API\",\n        \"total_bayar\": \"400000\",\n        \"jml_sample\": \"3\",\n        \"tanggal_bayar\": \"08-10-2026\",\n        \"tanggal_pengesahan\": \"10-10-2026\",\n        \"kode_negara\": \"62\",\n        \"kode_provinsi\": \"33\",\n        \"kode_kabupaten\": \"3374\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/inspeksi/insert/{{id_satker}}", "host": ["{{base_url}}"], "path": ["inspeksi", "insert", "{{id_satker}}"] },
+						"description": "Insert data inspeksi teknis."
+					}
+				},
+				{
+					"name": "12. Teknologi Proses — Insert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/TKP/2026/00001\",\n        \"nama_pelanggan\": \"PT. TEST POSTMAN\",\n        \"jenis_pelanggan\": \"INDUSTRI\",\n        \"tanggal_order\": \"08-10-2026\",\n        \"tanggal_selesai\": \"10-10-2026\",\n        \"keterangan_tekpro\": \"Test teknologi proses via Postman\",\n        \"keterangan_lainnya\": \"\",\n        \"uraian_tekpro\": \"Teknologi proses untuk validasi API\",\n        \"total_bayar\": \"600000\",\n        \"jml_alat\": \"2\",\n        \"tanggal_bayar\": \"08-10-2026\",\n        \"tanggal_pengesahan\": \"10-10-2026\",\n        \"kode_negara\": \"62\",\n        \"kode_provinsi\": \"33\",\n        \"kode_kabupaten\": \"3374\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/teknologiproses/insert/{{id_satker}}", "host": ["{{base_url}}"], "path": ["teknologiproses", "insert", "{{id_satker}}"] },
+						"description": "Insert data teknologi proses dan mesin."
+					}
+				},
+				{
+					"name": "13. Konsultasi — Insert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/KON/2026/00001\",\n        \"nama_pelanggan\": \"PT. TEST POSTMAN\",\n        \"jenis_pelanggan\": \"NON-INDUSTRI\",\n        \"tanggal_order\": \"08-10-2026\",\n        \"tanggal_selesai\": \"10-10-2026\",\n        \"keterangan_konsultasi\": \"Test konsultasi via Postman\",\n        \"keterangan_lainnya\": \"\",\n        \"uraian_konsultasi\": \"Konsultasi untuk validasi API\",\n        \"total_bayar\": \"200000\",\n        \"jml_laporan\": \"1\",\n        \"tanggal_bayar\": \"08-10-2026\",\n        \"tanggal_pengesahan\": \"10-10-2026\",\n        \"kode_negara\": \"62\",\n        \"kode_provinsi\": \"33\",\n        \"kode_kabupaten\": \"3374\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/konsultasi/insert/{{id_satker}}", "host": ["{{base_url}}"], "path": ["konsultasi", "insert", "{{id_satker}}"] },
+						"description": "Insert data konsultasi."
+					}
+				},
+				{
+					"name": "14. Rancang Bangun — Insert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/RBP/2026/00001\",\n        \"nama_pelanggan\": \"PT. TEST POSTMAN\",\n        \"jenis_pelanggan\": \"INDUSTRI\",\n        \"tanggal_order\": \"08-10-2026\",\n        \"tanggal_selesai\": \"10-10-2026\",\n        \"keterangan_rbpi\": \"Test rancang bangun via Postman\",\n        \"keterangan_lainnya\": \"\",\n        \"uraian_rbpi\": \"Rancang bangun untuk validasi API\",\n        \"total_bayar\": \"800000\",\n        \"jml_alat\": \"1\",\n        \"tanggal_bayar\": \"08-10-2026\",\n        \"tanggal_pengesahan\": \"10-10-2026\",\n        \"kode_negara\": \"62\",\n        \"kode_provinsi\": \"33\",\n        \"kode_kabupaten\": \"3374\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/rbpi/insert/{{id_satker}}", "host": ["{{base_url}}"], "path": ["rbpi", "insert", "{{id_satker}}"] },
+						"description": "Insert data rancang bangun / RBPI."
+					}
+				},
+				{
+					"name": "15. Inkubator — Insert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/INK/2026/00001\",\n        \"nama_pelanggan\": \"PT. TEST POSTMAN\",\n        \"jenis_pelanggan\": \"INDUSTRI\",\n        \"tanggal_order\": \"08-10-2026\",\n        \"tanggal_selesai\": \"10-10-2026\",\n        \"keterangan_inkubasi\": \"Test inkubator via Postman\",\n        \"keterangan_lainnya\": \"\",\n        \"uraian_inkubasi\": \"Inkubasi bisnis untuk validasi API\",\n        \"total_bayar\": \"1500000\",\n        \"jml_laporan\": \"2\",\n        \"tanggal_bayar\": \"08-10-2026\",\n        \"tanggal_pengesahan\": \"10-10-2026\",\n        \"kode_negara\": \"62\",\n        \"kode_provinsi\": \"33\",\n        \"kode_kabupaten\": \"3374\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/inkubator/insert/{{id_satker}}", "host": ["{{base_url}}"], "path": ["inkubator", "insert", "{{id_satker}}"] },
+						"description": "Insert data inkubator bisnis."
+					}
+				},
+				{
+					"name": "16. Teknologi Informasi — Insert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/TI/2026/00001\",\n        \"nama_pelanggan\": \"PT. TEST POSTMAN\",\n        \"jenis_pelanggan\": \"INDUSTRI\",\n        \"tanggal_order\": \"08-10-2026\",\n        \"tanggal_selesai\": \"10-10-2026\",\n        \"keterangan_ti\": \"Test teknologi informasi via Postman\",\n        \"keterangan_lainnya\": \"\",\n        \"uraian_ti\": \"TI untuk validasi API\",\n        \"total_bayar\": \"250000\",\n        \"jml_laporan\": \"1\",\n        \"tanggal_bayar\": \"08-10-2026\",\n        \"tanggal_pengesahan\": \"10-10-2026\",\n        \"kode_negara\": \"62\",\n        \"kode_provinsi\": \"33\",\n        \"kode_kabupaten\": \"3374\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/ti/insert/{{id_satker}}", "host": ["{{base_url}}"], "path": ["ti", "insert", "{{id_satker}}"] },
+						"description": "Insert data teknologi informasi."
+					}
+				},
+				{
+					"name": "17. Jasa Lainnya — Insert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/JLN/2026/00001\",\n        \"nama_pelanggan\": \"PT. TEST POSTMAN\",\n        \"jenis_pelanggan\": \"INDUSTRI\",\n        \"tanggal_order\": \"08-10-2026\",\n        \"tanggal_selesai\": \"10-10-2026\",\n        \"keterangan_jasalainnya\": \"Test jasa lainnya via Postman\",\n        \"keterangan_lainnya\": \"\",\n        \"uraian_jasalainnya\": \"Jasa lainnya untuk validasi API\",\n        \"total_bayar\": \"350000\",\n        \"jml_laporan\": \"1\",\n        \"tanggal_bayar\": \"08-10-2026\",\n        \"tanggal_pengesahan\": \"10-10-2026\",\n        \"kode_negara\": \"62\",\n        \"kode_provinsi\": \"33\",\n        \"kode_kabupaten\": \"3374\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/lainnya/insert/{{id_satker}}", "host": ["{{base_url}}"], "path": ["lainnya", "insert", "{{id_satker}}"] },
+						"description": "Insert data jasa lainnya."
+					}
+				},
+				{
+					"name": "18. Uji Profisiensi — Insert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/PUP/2026/00001\",\n        \"nama_pelanggan\": \"PT. TEST POSTMAN\",\n        \"jenis_pelanggan\": \"INDUSTRI\",\n        \"tanggal_order\": \"08-10-2026\",\n        \"tanggal_selesai\": \"10-10-2026\",\n        \"keterangan_uji\": \"Test uji profisiensi via Postman\",\n        \"keterangan_lainnya\": \"\",\n        \"uraian_pengujian\": \"Uji profisiensi untuk validasi API\",\n        \"total_bayar\": \"450000\",\n        \"jml_laporan\": \"1\",\n        \"tanggal_bayar\": \"08-10-2026\",\n        \"tanggal_pengesahan\": \"10-10-2026\",\n        \"kode_negara\": \"62\",\n        \"kode_provinsi\": \"33\",\n        \"kode_kabupaten\": \"3374\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/uji_profisiensi/insert/{{id_satker}}", "host": ["{{base_url}}"], "path": ["uji_profisiensi", "insert", "{{id_satker}}"] },
+						"description": "Insert data penyelenggara uji profisiensi."
+					}
+				},
+				{
+					"name": "19. Produsen Bahan Acuan — Insert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/PBA/2026/00001\",\n        \"nama_pelanggan\": \"PT. TEST POSTMAN\",\n        \"jenis_pelanggan\": \"INDUSTRI\",\n        \"tanggal_order\": \"08-10-2026\",\n        \"tanggal_selesai\": \"10-10-2026\",\n        \"keterangan_uji\": \"Test produsen bahan acuan via Postman\",\n        \"keterangan_lainnya\": \"\",\n        \"uraian_pengujian\": \"PBA untuk validasi API\",\n        \"total_bayar\": \"550000\",\n        \"jml_sample\": \"2\",\n        \"tanggal_bayar\": \"08-10-2026\",\n        \"tanggal_pengesahan\": \"10-10-2026\",\n        \"kode_negara\": \"62\",\n        \"kode_provinsi\": \"33\",\n        \"kode_kabupaten\": \"3374\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/produsen_bahan_acuan/insert/{{id_satker}}", "host": ["{{base_url}}"], "path": ["produsen_bahan_acuan", "insert", "{{id_satker}}"] },
+						"description": "Insert data produsen bahan acuan."
+					}
+				},
+				{
+					"name": "20. Verifikasi — Insert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/VER/2026/00001\",\n        \"nama_pelanggan\": \"PT. TEST POSTMAN\",\n        \"jenis_pelanggan\": \"INDUSTRI\",\n        \"jenis_verifikasi\": \"TKDN\",\n        \"tanggal_order\": \"08-10-2026\",\n        \"tanggal_selesai\": \"10-10-2026\",\n        \"keterangan_verifikasi\": \"Test verifikasi via Postman\",\n        \"uraian_verifikasi\": \"Verifikasi TKDN untuk validasi API\",\n        \"keterangan_lainnya\": \"\",\n        \"total_bayar\": \"700000\",\n        \"jml_sample\": \"1\",\n        \"tanggal_bayar\": \"08-10-2026\",\n        \"tanggal_pengesahan\": \"10-10-2026\",\n        \"kode_negara\": \"62\",\n        \"kode_provinsi\": \"33\",\n        \"kode_kabupaten\": \"3374\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/verifikasi/insert/{{id_satker}}", "host": ["{{base_url}}"], "path": ["verifikasi", "insert", "{{id_satker}}"] },
+						"description": "Insert data verifikasi.\n\nJenis Verifikasi: TKDN, GRK DAN NEK, EKOLABEL, ALKOHOL, LAINNYA"
+					}
+				},
+				{
+					"name": "21. Pemeriksaan Produk Halal — Insert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/HAL/2026/00001\",\n        \"nama_pelanggan\": \"PT. TEST POSTMAN\",\n        \"jenis_pelanggan\": \"INDUSTRI\",\n        \"tanggal_order\": \"08-10-2026\",\n        \"tanggal_selesai\": \"10-10-2026\",\n        \"keterangan_uji\": \"Test halal via Postman\",\n        \"keterangan_lainnya\": \"\",\n        \"uraian_pengujian\": \"Pemeriksaan halal untuk validasi API\",\n        \"total_bayar\": \"900000\",\n        \"jml_sample\": \"3\",\n        \"tanggal_bayar\": \"08-10-2026\",\n        \"tanggal_pengesahan\": \"10-10-2026\",\n        \"kode_negara\": \"62\",\n        \"kode_provinsi\": \"33\",\n        \"kode_kabupaten\": \"3374\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/halal/insert/{{id_satker}}", "host": ["{{base_url}}"], "path": ["halal", "insert", "{{id_satker}}"] },
+						"description": "Insert data pemeriksaan produk halal."
+					}
+				}
+			]
+		},
+		{
+			"name": "04 — Proyeksi Penerimaan",
+			"item": [
+				{
+					"name": "22. Proyeksi Penerimaan — Insert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"jenis_layanan\": \"PENGUJIAN\",\n        \"proyeksi_penerimaan\": \"50000000\",\n        \"tahun\": \"2026\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/proyeksi_penerimaan/insert/{{id_satker}}", "host": ["{{base_url}}"], "path": ["proyeksi_penerimaan", "insert", "{{id_satker}}"] },
+						"description": "Insert proyeksi penerimaan tahunan.\n\nJenis Layanan: PENGUJIAN, KALIBRASI, SERTIFIKASI, PELATIHAN, INSPEKSI TEKNIS, TEKNOLOGI PROSES, KONSULTASI, INKUBATOR, TEKNOLOGI INFORMASI, JASA LAINNYA, RANCANG BANGUN, UJI PROFISIENSI, PRODUSEN BAHAN ACUAN, VERIFIKASI, HALAL"
+					}
+				}
+			]
+		},
+		{
+			"name": "05 — Non-Aktif (Soft Delete)",
+			"item": [
+				{
+					"name": "Pengujian — Non Aktif",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/PUJ/2026/00001\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/pengujian/non_aktif/{{id_satker}}", "host": ["{{base_url}}"], "path": ["pengujian", "non_aktif", "{{id_satker}}"] },
+						"description": "Non-aktifkan (soft delete) data pengujian. Ganti no_order dengan nomor yang sudah di-insert."
+					}
+				},
+				{
+					"name": "Kalibrasi — Non Aktif",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/KAL/2026/00001\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/kalibrasi/non_aktif/{{id_satker}}", "host": ["{{base_url}}"], "path": ["kalibrasi", "non_aktif", "{{id_satker}}"] },
+						"description": "Non-aktifkan data kalibrasi."
+					}
+				},
+				{
+					"name": "Sertifikasi — Non Aktif",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/SER/2026/00001\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/sertifikasi/non_aktif/{{id_satker}}", "host": ["{{base_url}}"], "path": ["sertifikasi", "non_aktif", "{{id_satker}}"] },
+						"description": "Non-aktifkan data sertifikasi."
+					}
+				},
+				{
+					"name": "Pelatihan — Non Aktif",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/PEL/2026/00001\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/pelatihan/non_aktif/{{id_satker}}", "host": ["{{base_url}}"], "path": ["pelatihan", "non_aktif", "{{id_satker}}"] },
+						"description": "Non-aktifkan data pelatihan."
+					}
+				},
+				{
+					"name": "Inspeksi — Non Aktif",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/INS/2026/00001\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/inspeksi/non_aktif/{{id_satker}}", "host": ["{{base_url}}"], "path": ["inspeksi", "non_aktif", "{{id_satker}}"] },
+						"description": "Non-aktifkan data inspeksi."
+					}
+				},
+				{
+					"name": "Teknologi Proses — Non Aktif",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/TKP/2026/00001\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/teknologiproses/non_aktif/{{id_satker}}", "host": ["{{base_url}}"], "path": ["teknologiproses", "non_aktif", "{{id_satker}}"] },
+						"description": "Non-aktifkan data teknologi proses."
+					}
+				},
+				{
+					"name": "Konsultasi — Non Aktif",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/KON/2026/00001\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/konsultasi/non_aktif/{{id_satker}}", "host": ["{{base_url}}"], "path": ["konsultasi", "non_aktif", "{{id_satker}}"] },
+						"description": "Non-aktifkan data konsultasi."
+					}
+				},
+				{
+					"name": "Rancang Bangun — Non Aktif",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/RBP/2026/00001\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/rbpi/non_aktif/{{id_satker}}", "host": ["{{base_url}}"], "path": ["rbpi", "non_aktif", "{{id_satker}}"] },
+						"description": "Non-aktifkan data rancang bangun."
+					}
+				},
+				{
+					"name": "Inkubator — Non Aktif",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/INK/2026/00001\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/inkubator/non_aktif/{{id_satker}}", "host": ["{{base_url}}"], "path": ["inkubator", "non_aktif", "{{id_satker}}"] },
+						"description": "Non-aktifkan data inkubator."
+					}
+				},
+				{
+					"name": "Teknologi Informasi — Non Aktif",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/TI/2026/00001\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/ti/non_aktif/{{id_satker}}", "host": ["{{base_url}}"], "path": ["ti", "non_aktif", "{{id_satker}}"] },
+						"description": "Non-aktifkan data teknologi informasi."
+					}
+				},
+				{
+					"name": "Jasa Lainnya — Non Aktif",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/JLN/2026/00001\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/lainnya/non_aktif/{{id_satker}}", "host": ["{{base_url}}"], "path": ["lainnya", "non_aktif", "{{id_satker}}"] },
+						"description": "Non-aktifkan data jasa lainnya."
+					}
+				},
+				{
+					"name": "Uji Profisiensi — Non Aktif",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/PUP/2026/00001\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/uji_profisiensi/non_aktif/{{id_satker}}", "host": ["{{base_url}}"], "path": ["uji_profisiensi", "non_aktif", "{{id_satker}}"] },
+						"description": "Non-aktifkan data uji profisiensi."
+					}
+				},
+				{
+					"name": "Produsen Bahan Acuan — Non Aktif",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/PBA/2026/00001\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/produsen_bahan_acuan/non_aktif/{{id_satker}}", "host": ["{{base_url}}"], "path": ["produsen_bahan_acuan", "non_aktif", "{{id_satker}}"] },
+						"description": "Non-aktifkan data produsen bahan acuan."
+					}
+				},
+				{
+					"name": "Verifikasi — Non Aktif",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/VER/2026/00001\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/verifikasi/non_aktif/{{id_satker}}", "host": ["{{base_url}}"], "path": ["verifikasi", "non_aktif", "{{id_satker}}"] },
+						"description": "Non-aktifkan data verifikasi."
+					}
+				},
+				{
+					"name": "Halal — Non Aktif",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": { "mode": "raw", "raw": "[\n    {\n        \"no_order\": \"TEST/HAL/2026/00001\"\n    }\n]" },
+						"url": { "raw": "{{base_url}}/halal/non_aktif/{{id_satker}}", "host": ["{{base_url}}"], "path": ["halal", "non_aktif", "{{id_satker}}"] },
+						"description": "Non-aktifkan data halal."
+					}
+				}
+			]
+		},
+		{
+			"name": "06 — View Data (GET)",
+			"item": [
+				{
+					"name": "View Data Pengujian",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" }
+						],
+						"url": { "raw": "{{base_url}}/pengujian/{{id_satker}}", "host": ["{{base_url}}"], "path": ["pengujian", "{{id_satker}}"] },
+						"description": "Lihat data pengujian. Parameter {jenis} dikosongkan, langsung /{modul}/{id_satker} dengan method GET."
+					}
+				},
+				{
+					"name": "View Data Kalibrasi",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" }
+						],
+						"url": { "raw": "{{base_url}}/kalibrasi/{{id_satker}}", "host": ["{{base_url}}"], "path": ["kalibrasi", "{{id_satker}}"] },
+						"description": "Lihat data kalibrasi."
+					}
+				},
+				{
+					"name": "View Data Sertifikasi",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" }
+						],
+						"url": { "raw": "{{base_url}}/sertifikasi/{{id_satker}}", "host": ["{{base_url}}"], "path": ["sertifikasi", "{{id_satker}}"] },
+						"description": "Lihat data sertifikasi."
+					}
+				},
+				{
+					"name": "View Data Pelatihan",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" }
+						],
+						"url": { "raw": "{{base_url}}/pelatihan/{{id_satker}}", "host": ["{{base_url}}"], "path": ["pelatihan", "{{id_satker}}"] },
+						"description": "Lihat data pelatihan."
+					}
+				},
+				{
+					"name": "View Data Jasa Lainnya",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" }
+						],
+						"url": { "raw": "{{base_url}}/lainnya/{{id_satker}}", "host": ["{{base_url}}"], "path": ["lainnya", "{{id_satker}}"] },
+						"description": "Lihat data jasa lainnya."
+					}
+				},
+				{
+					"name": "View Data Verifikasi",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" }
+						],
+						"url": { "raw": "{{base_url}}/verifikasi/{{id_satker}}", "host": ["{{base_url}}"], "path": ["verifikasi", "{{id_satker}}"] },
+						"description": "Lihat data verifikasi."
+					}
+				},
+				{
+					"name": "View Data Halal",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{bearer_token}}" }
+						],
+						"url": { "raw": "{{base_url}}/halal/{{id_satker}}", "host": ["{{base_url}}"], "path": ["halal", "{{id_satker}}"] },
+						"description": "Lihat data halal."
+					}
+				}
+			]
+		}
+	]
+}
