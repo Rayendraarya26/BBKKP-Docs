@@ -91,3 +91,35 @@ Seluruh mutasi status kritis (perubahan tarif, approval permohonan, pembubuhan T
 * Aksi (Insert/Update/Delete)
 * Payload sebelum (*old_values*) & sesudah (*new_values*)
 * IP Address & User Agent
+
+---
+
+## 6. Perlindungan Data Pribadi & Sanitasi Log (UU PDP No. 27/2022)
+
+1. **Masking NIK & Data Sensitif pada Log**:
+   Dilarang mencatat Nomor Induk Kependudukan (NIK), nomor kartu identitas, atau nomor telepon pribadi secara utuh dalam berkas log server (`storage/logs/laravel.log`). Gunakan pola masking:
+   ```php
+   // ✅ BENAR (Masking NIK 16 digit: 6 digit awal + 6 bintang + 4 digit akhir)
+   $maskedNik = substr($nik, 0, 6) . '******' . substr($nik, -4);
+   Log::info("TTE requested for NIK: {$maskedNik}");
+   ```
+2. **Kerahasiaan Passphrase & TOTP**:
+   Passphrase sertifikat digital dan kode TOTP (One-Time Password) **HARUS** dikecualikan secara mutlak dari logging, database persistence, atau error trace.
+
+---
+
+## 7. Otorisasi Endpoint Finansial & Tanda Tangan Elektronik (TTE)
+
+1. **Enforce Role-Based Group Access Control**:
+   Setiap aksi penagihan (Invoice), penerbitan virtual account, dan persetujuan TTE Kuitansi wajib memverifikasi secara spesifik peran grup berwenang (`SysGroup::BENDAHARA`, `ROOT`, atau `ADMIN`):
+   ```php
+   // ✅ BENAR - Verifikasi peran Bendahara sebelum memicu penandatanganan elektronik
+   if (!$currentUser->hasGroup([SysGroup::BENDAHARA, SysGroup::ROOT, SysGroup::ADMIN])) {
+       return response()->json([
+           'status' => 'error',
+           'message' => 'Hanya Bendahara atau Administrator yang berhak menyetujui TTE Kuitansi.',
+       ], 403);
+   }
+   ```
+2. **Integritas Model Eloquent (Mass-Assignment Protection)**:
+   Hindari mencampuradukkan `$guarded = ['id']` dengan `$fillable`. Cantumkan seluruh kolom mutasi kritis (seperti `total_harga`, `sis_mohon_id`, `nomor_sertifikat`, tanggal terbit/kadaluarsa sertifikat) dalam array `$fillable` secara eksplisit agar pembaruan data dari webhook atau approval form tidak diabaikan secara diam-diam (*silent discard*).

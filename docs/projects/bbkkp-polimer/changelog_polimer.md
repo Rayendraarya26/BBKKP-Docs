@@ -1,16 +1,21 @@
 # 📜 Changelog Proyek: BBKKP Polimer (`bbkkp-polimer`)
 
 > **Repositori**: `Rayendraarya26/private-polimer` / `bakulkapas/bbkkp-polimer`  
-> **Periode Log**: 18 Agustus 2026 s/d 17 September 2026  
-> **Branch Aktif**: `polimer_sis`  
-> **Kontributor Terakhir**: Fajar Permana Putra / Permanaff (`fajar.permanaf314@gmail.com`)  
-> **Teknologi Utama**: Laravel 11, React 18 (TypeScript), Tailwind CSS, TanStack Query, BNI e-Collection, SIS Bridging
+> **Periode Log**: 18 Agustus 2026 s/d 08 Oktober 2026  
+> **Branch Aktif**: `polimer_v2` / `polimer_sis`  
+> **Kontributor Terakhir**: Antigravity Audit & Core Architecture Team  
+> **Teknologi Utama**: Laravel 11, React 18 (TypeScript), Tailwind CSS, TanStack Query, BNI e-Collection, SIS Bridging, BSrE TTE v2
 
 ---
 
 ## 📑 Ringkasan Log Harian
 
 ```
+8ead9d8 (2026-10-08 10:02) fix(eksternal): implement previewHasilUji, clean up orphan detail_pembayaran, and verify draft ownership
+8cb376d (2026-10-08 10:01) fix(security): enforce RBAC for Bendahara on TTE endpoints and mask NIK in logs
+e30ac6c (2026-10-08 10:00) fix(permohonan): expand bulkApprove match cases, persist total_harga, and include CERT prefix in sertifikasi filter
+80b9832 (2026-10-08 09:59) fix(webhook): correct metadata parsing, attachment persistence, and customer notification link
+c367295 (2026-10-08 09:58) fix(model): resolve fillable mass-assignment omission and guarded conflict on Permohonan
 wip-pengujian (2026-09-17 09:55) docs(pengujian): spesifikasi arsitektur & FRD form permohonan pengujian laboratorium sisi klien
 1aca9f7 (2026-09-09 09:05) feat(core): implement bridging SIS, multi-sertifikasi flow, BNI VA payment, and dual-rail sidebar UI
 798c6ac (2026-09-07 15:43) feat(integration): add auto-dispatch permohonan to SIS, webhook receiver, and sync master komoditi
@@ -68,6 +73,33 @@ c8ff4a3 (2026-08-18 06:19) fix: invoice template rendering
 ---
 
 ## 🔍 Detail Perubahan Berdasarkan Hari & Fitur
+
+### 📅 08 Oktober 2026
+
+#### 1. Audit Alur Permohonan 11 Layanan, Keamanan & Ketahanan Sistem (`polimer_v2`)
+* **Laporan & Rencana Audit Resmi**:
+  * Penyusunan laporan audit komprehensif: [`laporan_audit_alur_permohonan_11_layanan_dan_keamanan.md`](07-audit/laporan_audit_alur_permohonan_11_layanan_dan_keamanan.md) yang menguji 11 alur layanan: LSPro (Produk & Sistem), LSP Profesi, Pelatihan, Inspeksi Teknis, Sertifikasi Halal (LPH), Pengujian Lab, Kalibrasi Alat, Verifikasi GRK, Validasi GRK, Miniplant, dan Uji Profisiensi (PUP).
+  * Penyusunan kerangka kerja audit: [`rencana_audit_alur_permohonan_dan_keamanan.md`](07-audit/rencana_audit_alur_permohonan_dan_keamanan.md).
+* **Patch & Staged Commits**:
+  1. `c367295` — `fix(model): resolve fillable mass-assignment omission and guarded conflict on Permohonan`:
+     - Menambahkan kolom penting ke `$fillable`: `total_harga`, `sis_mohon_id`, `sis_sync_status`, `sis_synced_at`, `nomor_sertifikat`, `tanggal_sertifikat_terbit`, `tanggal_sertifikat_kadaluarsa`, `file_sertifikat_final`.
+     - Menghapus deklarasi redundan `$guarded = ['id']`.
+     - Menambahkan type cast `date` dan `datetime`.
+  2. `80b9832` — `fix(webhook): correct metadata parsing, attachment persistence, and customer notification link`:
+     - Memperbaiki typo `$metadata = $validated = ['metadata']` pada `handleMilestone`.
+     - Persistensi berkas laporan audit tahap 1 ke `$permohonan->file_attachment`.
+     - Mengubah URL tautan notifikasi pelanggan menjadi rute SPA publik `/app/#/permohonan`.
+  3. `e30ac6c` — `fix(permohonan): expand bulkApprove match cases, persist total_harga, and include CERT prefix in sertifikasi filter`:
+     - Melengkapi seluruh cabang ekspresi `match` pada `bulkApprove()` untuk 11 layanan plus default branch guna mencegah `UnhandledMatchError`.
+     - Memperbarui `total_harga` dan rute notifikasi pelanggan.
+     - Memperluas query DataTables sertifikasi internal agar menyertakan prefix `CERT%`.
+  4. `8cb376d` — `fix(security): enforce RBAC for Bendahara on TTE endpoints and mask NIK in logs`:
+     - Otorisasi ketat berbasis peran `BENDAHARA`, `ROOT`, atau `ADMIN` pada penandatanganan TTE Invoice dan Kuitansi.
+     - Masking nomor NIK pegawai (`320101******0001`) pada log server untuk kepatuhan UU PDP.
+  5. `8ead9d8` — `fix(eksternal): implement previewHasilUji, clean up orphan detail_pembayaran, and verify draft ownership`:
+     - Implementasi method `previewHasilUji()` pada `SertifikasiController` untuk preview dokumen LHU.
+     - Cascade delete `DetailPembayaran` saat penghapusan draft permohonan LSP dan Pelatihan.
+     - Proteksi kepemilikan data (`created_by === auth()->id()`) untuk mencegah potensi IDOR.
 
 ### 📅 17 September 2026
 

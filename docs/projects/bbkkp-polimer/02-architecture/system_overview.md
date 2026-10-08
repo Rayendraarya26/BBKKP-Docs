@@ -112,6 +112,7 @@ graph TD
   * Generasi & Persetujuan Invoice / Kuitansi (`InvoiceController.php`).
   * Integrasi TTE: Stream & Download dokumen ber-TTE (`downloadTte`, `streamTte`).
   * Master Data Lokasi (Provinsi, Kabupaten, Kecamatan) & Master Jenis/Lingkup Layanan.
+  * **Cakupan 11 Layanan Terpadu**: Mendukung 11 alur layanan publik & internal (Sertifikasi LSPro, Profesi LSP, Pelatihan, Inspeksi Teknis, Sertifikasi Halal LPH, Pengujian Lab, Kalibrasi LABKAL, Verifikasi GRK, Validasi GRK, Miniplant, dan Uji Profisiensi PUP). Rincian alur dan verifikasi keamanan terdokumentasi lengkap di [`laporan_audit_alur_permohonan_11_layanan_dan_keamanan.md`](../07-audit/laporan_audit_alur_permohonan_11_layanan_dan_keamanan.md).
 
 ### 4.4. Modul Admin (`Modules/Admin`)
 * **Tujuan**: Panel kontrol administrasi konten (*Content Management System*) portal.

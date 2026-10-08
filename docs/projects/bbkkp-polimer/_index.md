@@ -14,6 +14,7 @@ Folder ini berisi seluruh dokumentasi spesifik untuk aplikasi **BBKKP Polimer**.
   * [`system_overview.md`](02-architecture/system_overview.md) — Arsitektur & modul aplikasi Polimer.
   * [`multi_sertifikasi_architecture.md`](02-architecture/multi_sertifikasi_architecture.md) — Arsitektur pengajuan multi-sertifikasi & 4-step wizard.
   * [`form_pengujian_laboratorium.md`](02-architecture/form_pengujian_laboratorium.md) — Arsitektur Form Pengujian Laboratorium Sisi Klien (4-Step Wizard, Multi-Sample, BNI VA).
+  * [`pup_profisiensi_form_architecture.md`](02-architecture/pup_profisiensi_form_architecture.md) — Arsitektur Form Pengajuan Uji Profisiensi (PUP) 4-Step Wizard & Katalog Skema.
   * [`admin_helpdesk_system.md`](02-architecture/admin_helpdesk_system.md) — Sistem manajemen tiket helpdesk admin & notifikasi.
   * [`bni_va_payment_flow.md`](02-architecture/bni_va_payment_flow.md) — Arsitektur pembayaran BNI e-Collection VA & webhook.
   * [`tte_internal_service_integration.md`](02-architecture/tte_internal_service_integration.md) — Integrasi TTE BSrE decoupled via internal service.
@@ -36,6 +37,11 @@ Folder ini berisi seluruh dokumentasi spesifik untuk aplikasi **BBKKP Polimer**.
   * [`audit_sprint_1_to_3.md`](06-tasks/audit_sprint_1_to_3.md) — Laporan Audit Teknis Sprint 1 s.d. 3.
   * [`audit_sprint_1_to_5.md`](06-tasks/audit_sprint_1_to_5.md) — **Laporan Deep Audit Komprehensif Seluruh Milestone (Sprint 1 - 5 Final)**.
   * [`analisis_perbandingan_branch_polimer_sis.md`](06-tasks/analisis_perbandingan_branch_polimer_sis.md) — Analisis Perbedaan Branch & Acuan Merging `polimer_sis`.
+  * [`analisis_perbedaan_v2.1_internal_migration_vs_polimer_sis.md`](06-tasks/analisis_perbedaan_v2.1_internal_migration_vs_polimer_sis.md) — Analisis Perbedaan Branch v2.1 Internal Migration vs Polimer SIS.
+  * [`dokumentasi_perubahan_permanaff_polimer_sis.md`](06-tasks/dokumentasi_perubahan_permanaff_polimer_sis.md) — Dokumentasi Perubahan Kontributor Permanaff pada Branch `polimer_sis`.
+  * [`laporan_rekonsiliasi_merging_branch_polimer_sis.md`](06-tasks/laporan_rekonsiliasi_merging_branch_polimer_sis.md) — Laporan Rekonsiliasi & Resolusi Konflik Merging Branch `polimer_sis`.
 * **`07-audit/`**:
+  * [`laporan_audit_alur_permohonan_11_layanan_dan_keamanan.md`](07-audit/laporan_audit_alur_permohonan_11_layanan_dan_keamanan.md) — **Laporan Audit Komprehensif Alur Permohonan 11 Layanan, Keamanan RBAC & Resiliensi Integrasi (08 Oktober 2026)**.
+  * [`rencana_audit_alur_permohonan_dan_keamanan.md`](07-audit/rencana_audit_alur_permohonan_dan_keamanan.md) — Framework & Rencana Kerja Audit Alur Permohonan 11 Layanan Polimer.
   * [`deep_audit_modernisasi_polimer.md`](07-audit/deep_audit_modernisasi_polimer.md) — Laporan audit arsitektur modernisasi Polimer.
   * [`comprehensive_3day_audit_report.md`](07-audit/comprehensive_3day_audit_report.md) — Laporan audit komprehensif 3 hari terakhir.
