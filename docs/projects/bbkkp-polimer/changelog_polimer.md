@@ -11,6 +11,11 @@
 ## 📑 Ringkasan Log Harian
 
 ```
+30e2907 (2026-10-08 13:06) feat(permohonan): integrate form_aset and form_jasa_lainnya into admin datatable, approval, and detail views
+331f545 (2026-10-08 13:00) feat(views): add Blade templates for jasa-lainnya index, create, show, and edit pages
+02effa1 (2026-10-08 13:00) feat(permohonan): implement JasaLainnyaController with RBAC Bendahara-only access and route registration
+150a310 (2026-10-08 12:55) feat(eksternal): implement AsetController with CRUD, revision lifecycle, and route registration
+95c4d6b (2026-10-08 12:51) feat(database): add migration and models for form_aset and form_jasa_lainnya
 ea25220 (2026-10-08 12:31) feat(eksternal): implement update and ajukanUlang revision lifecycle for 6 secondary services
 8ead9d8 (2026-10-08 10:02) fix(eksternal): implement previewHasilUji, clean up orphan detail_pembayaran, and verify draft ownership
 8cb376d (2026-10-08 10:01) fix(security): enforce RBAC for Bendahara on TTE endpoints and mask NIK in logs
@@ -108,6 +113,35 @@ c8ff4a3 (2026-08-18 06:19) fix: invoice template rendering
      - Transisi status terstandardisasi: validasi status awal `PERMOHONAN_PERLU_PERBAIKAN`, reset ke `PERMOHONAN`, pembaruan `tgl_order = now()`, pencatatan milestone `PERMOHONAN_DIAJUKAN_ULANG` di `PermohonanTrackingLog`, dan notifikasi database ke admin staff.
      - Rekalkulasi biaya spesifik layanan (sampel/parameter pada pengujian, durasi/alat pada miniplant, bundling discount pada PUP).
      - Pendaftaran rute PUT/POST `update` dan POST `ajukan-ulang` di `Modules/Eksternal/routes/web.php`.
+
+#### 2. Modul Pengajuan Sewa Aset & Pencatatan Jasa Lainnya (PNBP) (`polimer_v2`)
+* **Spesifikasi & Dokumen Arsitektur**:
+  * [`arsitektur_pengajuan_aset_dan_jasa_lainnya.md`](02-architecture/arsitektur_pengajuan_aset_dan_jasa_lainnya.md) — Arsitektur modul sewa aset publik dan pencatatan jasa lainnya Bendahara.
+* **Staged Commits**:
+  1. `95c4d6b` — `feat(database): add migration and models for form_aset and form_jasa_lainnya`:
+     - Migrasi tabel `form_aset` untuk sewa lapangan, bangunan, alat, mobil, dan ruangan.
+     - Migrasi tabel `form_jasa_lainnya` untuk pencatatan PNBP jasa lainnya oleh Bendahara.
+     - Model Eloquent `FormAset` dan `FormJasaLainnya` dengan relasi polymorphic ke `DetailPermohonan`.
+     - Registrasi relasi `formAset()` dan `formJasaLainnya()` pada model `Permohonan`.
+  2. `150a310` — `feat(eksternal): implement AsetController with CRUD, revision lifecycle, and route registration`:
+     - Endpoint `getJenisSewa` untuk dropdown pilihan sewa aset.
+     - Endpoint `store` dengan nomor otomatis `0001/ASET/{Romawi}/{Y}`, snapshot identitas pemohon, dan link polymorphic `DetailPermohonan`.
+     - Endpoint `show`, `update`, dan `ajukanUlang` dengan proteksi anti-IDOR dan lifecycle revisi.
+     - Registrasi rute `/api/eksternal/aset` di `Modules/Eksternal/routes/web.php`.
+  3. `02effa1` — `feat(permohonan): implement JasaLainnyaController with RBAC Bendahara-only access and route registration`:
+     - Controller `JasaLainnyaController` dengan proteksi ketat `SysGroup::BENDAHARA`.
+     - Nomor otomatis `0001/JASA/{Romawi}/{Y}`, status workflow langsung `DONE` dan bayar `LUNAS`.
+     - Pembuatan otomatis `DetailPembayaran` dan `PermohonanTrackingLog` (`JASA_DICATAT`).
+     - Registrasi rute `/permohonan/jasa-lainnya` di `Modules/Permohonan/routes/web.php`.
+  4. `331f545` — `feat(views): add Blade templates for jasa-lainnya index, create, show, and edit pages`:
+     - `index.blade.php`: DataTable server-side dengan SweetAlert2 delete confirmation.
+     - `create.blade.php`: Cascading dropdown provinsi/kabupaten, format rupiah real-time, dan validasi input.
+     - `show.blade.php`: Rincian transaksi, pembayaran, metadata pencatat, dan timeline log.
+     - `edit.blade.php`: Form perbaikan data transaksi khusus Bendahara.
+  5. `30e2907` — `feat(permohonan): integrate form_aset and form_jasa_lainnya into admin datatable, approval, and detail views`:
+     - Eager loading dan pemetaan user/layanan untuk prefix `ASET` dan `JASA` di `datatable()` dan `datatableBendahara()`.
+     - Mapping item bayar dan resolusi identitas pemohon di `approve()` dan `bulkApprove()`.
+     - Komponen detail form `forms/aset.blade.php` dan resolusi view di `detail.blade.php`.
 
 ### 📅 17 September 2026
 

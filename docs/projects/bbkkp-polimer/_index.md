@@ -20,6 +20,7 @@ Folder ini berisi seluruh dokumentasi spesifik untuk aplikasi **BBKKP Polimer**.
   * [`tte_internal_service_integration.md`](02-architecture/tte_internal_service_integration.md) — Integrasi TTE BSrE decoupled via internal service.
   * [`developer_guide.md`](02-architecture/developer_guide.md) — Panduan Pengembang & Standar Arsitektur Unified React SPA.
   * [`analisis_roadmap.md`](02-architecture/analisis_roadmap.md) — Analisis kode & strategi refactoring Polimer.
+  * [`arsitektur_pengajuan_aset_dan_jasa_lainnya.md`](02-architecture/arsitektur_pengajuan_aset_dan_jasa_lainnya.md) — Arsitektur Modul Pengajuan Sewa Aset & Pencatatan Jasa Lainnya (PNBP).
 * **`05-operations/`**:
   * [`setup_guide.md`](05-operations/setup_guide.md) — Panduan instalasi dan lingkungan lokal.
   * [`test_accounts.md`](05-operations/test_accounts.md) — Daftar akun pengujian, database seeder (`UserSeeder`, `MarketingUserSeeder`, `DummyPolimerSeeder`).
