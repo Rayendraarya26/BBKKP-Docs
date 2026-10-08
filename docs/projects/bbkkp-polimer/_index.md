@@ -21,6 +21,8 @@ Folder ini berisi seluruh dokumentasi spesifik untuk aplikasi **BBKKP Polimer**.
   * [`developer_guide.md`](02-architecture/developer_guide.md) — Panduan Pengembang & Standar Arsitektur Unified React SPA.
   * [`analisis_roadmap.md`](02-architecture/analisis_roadmap.md) — Analisis kode & strategi refactoring Polimer.
   * [`arsitektur_pengajuan_aset_dan_jasa_lainnya.md`](02-architecture/arsitektur_pengajuan_aset_dan_jasa_lainnya.md) — Arsitektur Modul Pengajuan Sewa Aset & Pencatatan Jasa Lainnya (PNBP).
+  * [`integrasi_api_sippt_bskji.md`](02-architecture/integrasi_api_sippt_bskji.md) — **Dokumentasi Integrasi API SIPPT BSKJI (22 Endpoint, Autentikasi, Field Mapping & Arsitektur Sinkronisasi)**.
+  * [`laporan_implementasi_integrasi_sippt_bskji.md`](02-architecture/laporan_implementasi_integrasi_sippt_bskji.md) — **Laporan Implementasi: Integrasi API SIPPT BSKJI (v13)**.
 * **`05-operations/`**:
   * [`setup_guide.md`](05-operations/setup_guide.md) — Panduan instalasi dan lingkungan lokal.
   * [`test_accounts.md`](05-operations/test_accounts.md) — Daftar akun pengujian, database seeder (`UserSeeder`, `MarketingUserSeeder`, `DummyPolimerSeeder`).
@@ -28,6 +30,7 @@ Folder ini berisi seluruh dokumentasi spesifik untuk aplikasi **BBKKP Polimer**.
   * [`user_manual_customer.md`](05-operations/user_manual_customer.md) — Panduan Pengguna Portal Pelanggan.
   * [`user_manual_admin.md`](05-operations/user_manual_admin.md) — Panduan Pengguna Portal Admin & Petugas Balai.
   * [`cutover_and_deployment_sop.md`](05-operations/cutover_and_deployment_sop.md) — Standar Operasional Prosedur (SOP) Zero-Downtime Production Cutover.
+  * [`panduan_testing_integrasi_sippt_bskji.md`](05-operations/panduan_testing_integrasi_sippt_bskji.md) — **Panduan Pengujian (Testing Guide) Integrasi API SIPPT BSKJI**.
 * **`06-tasks/`**:
   * [`milestone.md`](06-tasks/milestone.md) — Roadmap milestone & 5-sprint plan modernisasi Polimer.
   * [`sprint_1_breakdown.md`](06-tasks/sprint_1_breakdown.md) — Rincian tugas Sprint 1: Design System, Tailwind & UI Kit.
