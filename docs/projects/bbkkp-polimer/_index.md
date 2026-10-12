@@ -22,7 +22,8 @@ Folder ini berisi seluruh dokumentasi spesifik untuk aplikasi **BBKKP Polimer**.
   * [`analisis_roadmap.md`](02-architecture/analisis_roadmap.md) — Analisis kode & strategi refactoring Polimer.
   * [`arsitektur_pengajuan_aset_dan_jasa_lainnya.md`](02-architecture/arsitektur_pengajuan_aset_dan_jasa_lainnya.md) — Arsitektur Modul Pengajuan Sewa Aset & Pencatatan Jasa Lainnya (PNBP).
   * [`integrasi_api_sippt_bskji.md`](02-architecture/integrasi_api_sippt_bskji.md) — **Dokumentasi Integrasi API SIPPT BSKJI (22 Endpoint, Autentikasi, Field Mapping & Arsitektur Sinkronisasi)**.
-  * [`laporan_implementasi_integrasi_sippt_bskji.md`](02-architecture/laporan_implementasi_integrasi_sippt_bskji.md) — **Laporan Implementasi: Integrasi API SIPPT BSKJI (v13)**.
+  * [`laporan_implementasi_integrasi_sippt_bskji.md`](02-architecture/laporan_implementasi_integrasi_sippt_bskji.md) — **Laporan Implementasi Awal: Integrasi API SIPPT BSKJI (v13)**.
+  * [`laporan_pertanggungjawaban_integrasi_api_sippt_bskji.md`](02-architecture/laporan_pertanggungjawaban_integrasi_api_sippt_bskji.md) — **Laporan Pertanggungjawaban & Dokumentasi Komprehensif: Integrasi API SIPPT BSKJI (Selesai 100% & Siap Produksi)**.
 * **`05-operations/`**:
   * [`setup_guide.md`](05-operations/setup_guide.md) — Panduan instalasi dan lingkungan lokal.
   * [`test_accounts.md`](05-operations/test_accounts.md) — Daftar akun pengujian, database seeder (`UserSeeder`, `MarketingUserSeeder`, `DummyPolimerSeeder`).
@@ -45,6 +46,7 @@ Folder ini berisi seluruh dokumentasi spesifik untuk aplikasi **BBKKP Polimer**.
   * [`dokumentasi_perubahan_permanaff_polimer_sis.md`](06-tasks/dokumentasi_perubahan_permanaff_polimer_sis.md) — Dokumentasi Perubahan Kontributor Permanaff pada Branch `polimer_sis`.
   * [`laporan_rekonsiliasi_merging_branch_polimer_sis.md`](06-tasks/laporan_rekonsiliasi_merging_branch_polimer_sis.md) — Laporan Rekonsiliasi & Resolusi Konflik Merging Branch `polimer_sis`.
 * **`07-audit/`**:
+  * [`laporan_audit_integrasi_api_sippt_bskji.md`](07-audit/laporan_audit_integrasi_api_sippt_bskji.md) — **Laporan Audit Integrasi API SIPPT BSKJI (v1.3) — Evaluasi Kepatuhan & Perbaikan Sistem (12 Oktober 2026)**.
   * [`laporan_audit_alur_permohonan_11_layanan_dan_keamanan.md`](07-audit/laporan_audit_alur_permohonan_11_layanan_dan_keamanan.md) — **Laporan Audit Komprehensif Alur Permohonan 11 Layanan, Keamanan RBAC & Resiliensi Integrasi (08 Oktober 2026)**.
   * [`rencana_audit_alur_permohonan_dan_keamanan.md`](07-audit/rencana_audit_alur_permohonan_dan_keamanan.md) — Framework & Rencana Kerja Audit Alur Permohonan 11 Layanan Polimer.
   * [`deep_audit_modernisasi_polimer.md`](07-audit/deep_audit_modernisasi_polimer.md) — Laporan audit arsitektur modernisasi Polimer.
